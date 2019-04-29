@@ -1,2 +1,7 @@
 # Goorm IDE
 goorm.manifest
+
+# Terraform
+.terraform/
+terraform.tfstate*
+provider.tf
