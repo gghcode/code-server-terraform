@@ -38,4 +38,16 @@ resource "aws_instance" "my_workspace_ec2" {
     "${aws_security_group.http.id}",
     "${data.aws_security_group.default.id}"
   ]
+
+  provisioner "file" {
+    source = "provision-remote-vsc.sh"
+    destination = "/scripts/provision-remote-vsc.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /scripts/provision-remote-vsc.sh",
+      "sh /scripts/provision-remote-vsc.sh",
+    ]
+  }
 }
