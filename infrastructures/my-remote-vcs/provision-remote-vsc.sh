@@ -1,6 +1,8 @@
 #!/bin/bash
 
 CODE_SERVER_VERSION="1.939-vsc1.33.1"
+
+APP_PATH="/usr/local/bin"
 SRC_FILE_NAME="code-server$CODE_SERVER_VERSION-linux-x64.tar.gz"
 SRC_FILE_PATH="code-server$CODE_SERVER_VERSION-linux-x64"
 
@@ -19,19 +21,21 @@ if [ "$?" -ne "0" ]; then
   exit 2
 fi 
 
-cd $SRC_FILE_PATH
+cp $SRC_FILE_PATH/code-server $APP_PATH/
 if [ "$?" -ne "0" ]; then
-  echo "Not found filePath..."
+  echo "App copy failed..."
   exit 3
 fi
 
-chmod +x code-server
+rm -r $SRC_FILE_PATH*
+
+chmod +x $APP_PATH/code-server
 if [ "$?" -ne "0" ]; then
   echo "Can't allow execute permission..."
   exit 4
 fi
 
-./code-server -p $CODE_SERVER_PORT --allow-http
+$APP_PATH/code-server -p $CODE_SERVER_PORT --allow-http
 if [ "$?" -ne "0" ]; then
   echo "code-server start failed..."
   exit 5
