@@ -9,6 +9,14 @@ SRC_FILE_PATH="code-server$CODE_SERVER_VERSION-linux-x64"
 # code-server Runtime options
 CODE_SERVER_PORT=80
 
+# Check installed version
+installed_version=$(code-server --version)
+if [ "$installed_version" = "$CODE_SERVER_VERSION" ];
+then
+  echo "Already code-server $CODE_SERVER_VERSION installed..."
+  exit 0
+fi
+
 wget https://github.com/cdr/code-server/releases/download/$CODE_SERVER_VERSION/$SRC_FILE_NAME
 if [ "$?" -ne "0" ]; then
   echo "source download failed..."
