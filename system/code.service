@@ -1,0 +1,11 @@
+[Unit]
+Description=VSCode server
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/code-server/code-server.conf
+ExecStart=/usr/local/bin/code-server -H -p $PORT -d ~/.config/Code
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

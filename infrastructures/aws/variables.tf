@@ -28,6 +28,10 @@ variable "src_bootstrap_sh" {
     default = "../../scripts/provision-remote-vsc.sh"
 }
 
+variable "src_service_template" {
+    default = "../../system/code.service"
+}
+
 variable "docker_package" {
     default = "18.06.1~ce~3-0~ubuntu"
 }
