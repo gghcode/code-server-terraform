@@ -53,7 +53,7 @@ resource "aws_instance" "my_workspace_ec2" {
   }
 
   provisioner "file" {
-    source = "provision-remote-vsc.sh"
+    source = "${var.src_bootstrap_sh}"
     destination = "/home/${var.ec2_default_user}/provision-remote-vsc.sh"
   }
 

@@ -20,3 +20,7 @@ variable "ec2_prikey_path" {
 variable "ec2_pubkey_path" {
     default = "~/.ssh/my_workspace_admin.pub"
 }
+
+variable "src_bootstrap_sh" {
+    default = "../../scripts/provision-remote-vsc.sh"
+}
