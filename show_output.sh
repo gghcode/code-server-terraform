@@ -1,0 +1,1 @@
+sh -c "cd infrastructures/aws && terraform output"
