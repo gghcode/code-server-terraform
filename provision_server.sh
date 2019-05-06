@@ -1,6 +1,12 @@
 vscPwd=$1
 keyName=my_workspace_admin
 
+if [ $# -lt 1 ]; 
+then
+    echo "Require password argument!"
+    exit 1
+fi
+
 scripts/generate_aws_keypem.sh $keyName
 
 sh -c "cd infrastructures/aws && terraform plan"
