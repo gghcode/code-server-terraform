@@ -12,17 +12,12 @@ variable "ec2_default_user" {
     default = "ubuntu"
 }
 
+variable "ec2_key_dir" {
+    default = "~/.ssh"
+}
+
 variable "ec2_key_name" {
     default = "my_workspace_admin"
-}
-
-variable "ec2_prikey_path" {
-    default = "~/.ssh/${var.ec2_key_name}"
-}
-
-
-variable "ec2_pubkey_path" {
-    default = "~/.ssh/${var.ec2_key_name}.pub"
 }
 
 variable "src_bootstrap_sh" {
