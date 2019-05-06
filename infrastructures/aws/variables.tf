@@ -5,7 +5,7 @@ variable "ec2_instance_type" {
 
 variable "ec2_ami" {
     type = "string"
-    default = "ami-078e96948945fc2c9"
+    default = "ami-067c32f3d5b9ace91"
 }
 
 variable "ec2_default_user" {
@@ -21,7 +21,7 @@ variable "ec2_key_name" {
 }
 
 variable "src_scripts_dir" {
-    default = "../../scripts"
+    default = "../../scripts/"
 }
 
 variable "src_bootstrap_sh" {
