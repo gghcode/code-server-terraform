@@ -1,4 +1,4 @@
-keyName=my_workspace_adm
+keyName=my_workspace_admin
 
 scripts/generate_aws_keypem.sh $keyName
 
