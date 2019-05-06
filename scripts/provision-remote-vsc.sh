@@ -42,7 +42,7 @@ else
   fi
 fi
 
-$APP_PATH/code-server -P $CODE_PWD -p $CODE_SERVER_PORT --allow-http -d ~/.config/Code &
+$APP_PATH/code-server -p $CODE_SERVER_PORT --allow-http -d ~/.config/Code &
 if [ "$?" -ne "0" ]; then
   echo "code-server start failed..."
   exit 5
