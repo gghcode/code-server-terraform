@@ -1,6 +1,6 @@
 resource "aws_key_pair" "my_workspace_admin" {
   key_name = "my_workspace_admin"
-  public_key = "${file("~/.ssh/my_workspace_admin.pub")}"
+  public_key = "${file("${var.ec2_pubkey_path}")}"
 }
 
 resource "aws_security_group" "ssh" {
@@ -20,7 +20,13 @@ resource "aws_security_group" "http" {
   ingress {
     from_port = 80
     to_port = 80
-    protocol = "http"
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -30,8 +36,8 @@ data "aws_security_group" "default" {
 }
 
 resource "aws_instance" "my_workspace_ec2" {
-  ami = "ami-e21cc38c" # Amazon Linux AMI 2017.03.1 Seoul
-  instance_type = "t2.micro"
+  ami = "${var.ec2_ami}" # Amazon Linux AMI 2017.03.1 Seoul
+  instance_type = "${var.ec2_instance_type}"
   key_name = "${aws_key_pair.my_workspace_admin.key_name}"
   vpc_security_group_ids = [
     "${aws_security_group.ssh.id}",
@@ -39,15 +45,22 @@ resource "aws_instance" "my_workspace_ec2" {
     "${data.aws_security_group.default.id}"
   ]
 
+  connection {
+    user        = "${var.ec2_default_user}"
+    type        = "ssh"
+    private_key = "${file("${var.ec2_prikey_path}")}"
+    timeout     = "2m"
+  }
+
   provisioner "file" {
     source = "provision-remote-vsc.sh"
-    destination = "/scripts/provision-remote-vsc.sh"
+    destination = "/home/${var.ec2_default_user}/provision-remote-vsc.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /scripts/provision-remote-vsc.sh",
-      "sh /scripts/provision-remote-vsc.sh",
+      "chmod +x /home/${var.ec2_default_user}/provision-remote-vsc.sh",
+      "sudo sh /home/${var.ec2_default_user}/provision-remote-vsc.sh",
     ]
   }
 }
