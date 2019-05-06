@@ -14,7 +14,6 @@ add-apt-repository \
 apt-get -y update
 apt-get -y install docker-ce=$dockerVersion
 
-# service docker start
 systemctl enable docker
 
 usermod -aG docker ubuntu
