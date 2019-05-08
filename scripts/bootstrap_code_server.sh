@@ -19,8 +19,6 @@ echo "PASSWORD=$password" >> /etc/code-server/code-server.conf
 echo "PORT=$port" >> /etc/code-server/code-server.conf
 
 # Move service file
-userDir=$(dirname "$baseDir")
-
 mv $userDir/code.service /etc/systemd/system/
 
 # Setup systemctl
