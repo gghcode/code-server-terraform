@@ -5,6 +5,12 @@ userDir=$(dirname "$baseDir")
 password=$1
 port=$2
 
+if [ $# -lt 2 ]; 
+then
+    echo "Require arguments <password> <port>"
+    exit 1
+fi
+
 # Install code-server
 sh $baseDir/get_code_server.sh
 if [ "$?" -ne "0" ]; 
@@ -17,7 +23,7 @@ fi
 certPath=~/certs/MyCertificate.crt
 certKeyPath=~/certs/MyKey.key
 
-sh $baseDir/generate_cert.sh
+sh $baseDir/generate_cert.sh $certPath $certKeyPath
 if [ "$?" -ne "0" ];
 then
   echo "ssl certificate generate failed..."
