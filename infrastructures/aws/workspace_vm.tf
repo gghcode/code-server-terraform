@@ -69,7 +69,8 @@ resource "aws_instance" "my_workspace_ec2" {
 
   provisioner "remote-exec" {
     inline = [
-      "mkdir -p /home/${var.ec2_default_user}/scripts"
+      "mkdir -p ~/certs",
+      "mkdir -p ~/scripts"
     ]
   }
 
@@ -86,9 +87,7 @@ resource "aws_instance" "my_workspace_ec2" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /home/${var.ec2_default_user}/scripts/*sh",
-      "sudo sh /home/${var.ec2_default_user}/scripts/bootstrap_code_server.sh ${var.vsc_password} ${var.vsc_port}",
-      # "sudo mv /home/${var.ec2_default_user}/code.service /etc/systemd/system/",
-      # "sudo sh /home/${var.ec2_default_user}/scripts/get_code_server.sh"
+      "sudo sh /home/${var.ec2_default_user}/scripts/bootstrap_code_server.sh ${var.vsc_password} ${var.vsc_port}"
     ]
   }
 }
