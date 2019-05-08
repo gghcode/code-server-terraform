@@ -4,7 +4,7 @@ Description=VSCode server
 [Service]
 Type=simple
 EnvironmentFile=/etc/code-server/code-server.conf
-ExecStart=/usr/local/bin/code-server -H -p $PORT -d ~/.config/Code --cert=$CERT_PATH --cert-key=$CERT_KEY_PATH
+ExecStart=/usr/local/bin/code-server -H -p $PORT -d ~/.config/Code --cert $CERT_PATH --cert-key $CERT_KEY_PATH
 Restart=always
 
 [Install]
