@@ -1,6 +1,13 @@
 #!/bin/sh
-dockerVersion=18.06.3~ce~3-0~ubuntu
+dockerVersion=$1
 
+if [ -z $dockerVersion ];
+then
+    echo "Require dockerVersion"
+    exit 1
+fi
+
+apt-get update
 apt-get purge -y docker lxc-docker docker-engine docker.io
 apt-get install -y curl apt-transport-https ca-certificates \
     software-properties-common
