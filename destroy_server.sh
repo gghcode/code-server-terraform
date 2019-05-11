@@ -1,1 +1,3 @@
-sh -c "cd infrastructures/aws && terraform destroy -auto-approve"
+#!/bin/sh
+baseDir=$(dirname "$0")
+sh -c "cd ${baseDir}/infrastructures/aws && terraform destroy -auto-approve"

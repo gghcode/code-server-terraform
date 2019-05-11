@@ -1,3 +1,6 @@
+#!/bin/sh
+baseDir=$(dirname "$0")
+
 vscPwd=$1
 vscPort=$2
 keyName=my_workspace_admin
@@ -13,12 +16,17 @@ then
   vscPort=80
 fi
 
-scripts/generate_aws_keypem.sh $keyName
+sh $baseDir/scripts/get_terraform.sh
+sh $baseDir/scripts/generate_aws_keypem.sh $keyName
 
-sh -c "cd infrastructures/aws && terraform plan"
+sh -c "cd $baseDir/infrastructures/aws && terraform plan"
 if [ "$?" -ne "0" ]; then
   echo "terraform plan failed"
   exit 1
 fi
 
-sh -c "cd infrastructures/aws && terraform apply -auto-approve -var ec2_key_name=$keyName -var vsc_password=$vscPwd -var vsc_port=$vscPort"
+sh -c "cd $baseDir/infrastructures/aws && \
+   terraform apply -auto-approve \
+   -var ec2_key_name=$keyName \
+   -var vsc_password=$vscPwd \
+   -var vsc_port=$vscPort"
