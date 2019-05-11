@@ -5,7 +5,7 @@ certPath=/etc/ssl/certs/MyCertificate.crt
 certKeyPath=/etc/ssl/certs/MyKey.key
 # certPath=~/certs/MyCertificate.crt
 # certKeyPath=~/certs/MyKey.key
-codeConfigPath=~/.config/Code
+codeConfigPath=$HOME/.config/Code
 
 sh $baseDir/generate_cert.sh $certPath $certKeyPath
 sh $baseDir/get_code_server.sh
