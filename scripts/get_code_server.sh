@@ -1,38 +1,37 @@
 #!/bin/sh
+codeServerVersion="1.939-vsc1.33.1"
 
-CODE_SERVER_VERSION="1.939-vsc1.33.1"
-
-APP_PATH="/usr/local/bin"
-SRC_FILE_NAME="code-server$CODE_SERVER_VERSION-linux-x64.tar.gz"
-SRC_FILE_PATH="code-server$CODE_SERVER_VERSION-linux-x64"
+appInstallPath="/usr/local/bin"
+srcFileName="code-server$codeServerVersion-linux-x64.tar.gz"
+srcFilePath="code-server$codeServerVersion-linux-x64"
 
 # Check installed version
-installed_version=$(code-server --version)
-if [ "$installed_version" = "$CODE_SERVER_VERSION" ];
+installedVersion=$(code-server --version)
+if [ "$installedVersion" = "$codeServerVersion" ];
 then
-  echo "Already code-server $CODE_SERVER_VERSION installed..."
+  echo "Already code-server $codeServerVersion installed..."
 else
-  wget https://github.com/cdr/code-server/releases/download/$CODE_SERVER_VERSION/$SRC_FILE_NAME
+  wget https://github.com/cdr/code-server/releases/download/$codeServerVersion/$srcFileName
   if [ "$?" -ne "0" ]; then
     echo "source download failed..."
     exit 1
   fi
 
-  tar -xvzf $SRC_FILE_NAME
+  tar -xvzf $srcFileName
   if [ "$?" -ne "0" ]; then
     echo "source unzip failed..."
     exit 2
   fi 
 
-  cp $SRC_FILE_PATH/code-server $APP_PATH/
+  cp $srcFilePath/code-server $appInstallPath/
   if [ "$?" -ne "0" ]; then
     echo "App copy failed..."
     exit 3
   fi
 
-  rm -r $SRC_FILE_PATH*
+  rm -r $srcFilePath*
 
-  chmod +x $APP_PATH/code-server
+  chmod +x $appInstallPath/code-server
   if [ "$?" -ne "0" ]; then
     echo "Can't allow execute permission..."
     exit 4
