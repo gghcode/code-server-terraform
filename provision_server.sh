@@ -19,7 +19,7 @@ fi
 sh $baseDir/scripts/get_terraform.sh
 sh $baseDir/scripts/generate_aws_keypem.sh $keyName
 
-sh -c "cd $baseDir/infrastructures/aws && terraform plan"
+sh -c "cd $baseDir/infrastructures/aws && terraform init && terraform plan"
 if [ "$?" -ne "0" ]; then
   echo "terraform plan failed"
   exit 1
