@@ -70,7 +70,8 @@ resource "aws_instance" "my_workspace_ec2" {
   provisioner "remote-exec" {
     inline = [
       "mkdir -p ~/certs",
-      "mkdir -p ~/scripts"
+      "mkdir -p ~/scripts",
+      "mkdir -p ~/system"
     ]
   }
 
@@ -81,7 +82,7 @@ resource "aws_instance" "my_workspace_ec2" {
 
   provisioner "file" {
     source = "${var.src_service_template}"
-    destination = "/home/${var.ec2_default_user}/code.service"
+    destination = "/home/${var.ec2_default_user}/system/code.service"
   }
 
   provisioner "remote-exec" {

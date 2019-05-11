@@ -1,5 +1,4 @@
 #!/bin/sh
-
 baseDir=$(dirname "$0")
 userDir=$(dirname "$baseDir")
 password=$1
@@ -37,8 +36,8 @@ echo "PORT=$port" >> /etc/code-server/code-server.conf
 echo "CERT_PATH=$certPath" >> /etc/code-server/code-server.conf
 echo "CERT_KEY_PATH=$certKeyPath" >> /etc/code-server/code-server.conf
 
-# Move service file
-mv $userDir/code.service /etc/systemd/system/
+# Copy service file
+cp $userDir/system/code.service /etc/systemd/system/
 
 # Setup systemctl
 systemctl enable code
