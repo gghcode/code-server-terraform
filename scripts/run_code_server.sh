@@ -10,7 +10,7 @@ codeConfigPath=$HOME/.config/Code
 sh $baseDir/generate_cert.sh $certPath $certKeyPath
 sh $baseDir/get_code_server.sh
 
-code-server -H -p $CODE_SERVER_PORT -d $codeConfigPath --cert=$certPath --cert-key=$certKeyPath
+code-server -H -p $CODE_SERVER_PORT -d $codeConfigPath --cert=$certPath --cert-key=$certKeyPath --disable-telemetry
 if [ "$?" -ne "0" ]; then
   echo "code-server start failed..."
   exit 5
