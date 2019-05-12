@@ -88,8 +88,9 @@ resource "aws_instance" "my_workspace_ec2" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /home/${var.ec2_default_user}/scripts/*sh",
-      "sudo sh ~/scripts/setup_docker.sh ${var.docker_package}",
+      "sudo sh ~/scripts/get_git.sh",
       "sudo sh ~/scripts/get_go.sh",
+      "sudo sh ~/scripts/setup_docker.sh ${var.docker_package}",
       "sudo sh /home/${var.ec2_default_user}/scripts/bootstrap_code_server.sh ${var.vsc_password} ${var.vsc_port}"
     ]
   }
