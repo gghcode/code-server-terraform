@@ -1,13 +1,14 @@
-#!/bin/sh
-
-if [ $# -lt 1 ]; 
-then
-    echo "Require keyname option like ./generate_aws_keypem.sh <keyname>"
+#!/usr/bin/env bash
+if [ $# -lt 1 ]; then
+    echo "Require keyname argument!"
     exit 1
 fi
 
-keyName=$1
-keyPath=$HOME/.ssh/$keyName
+KEY_NAME=$1
+KEY_PATH=$HOME/.ssh/$KEY_NAME
 
-rm -f $keyPath $keyPath.pub &> /dev/null
-ssh-keygen -t rsa -b 4096 -C "gyuhwan.a.kim@gmail.com" -f $keyPath -N ""
+rm -f $KEY_PATH $KEY_PATH.pub &> /dev/null
+
+ssh-keygen -t rsa -b 4096 -f $KEY_PATH -N "" &> /dev/null
+
+echo "Pem created successful on $KEY_PATH"
