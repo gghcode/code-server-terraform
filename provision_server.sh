@@ -32,14 +32,50 @@ do
     esac
 done
 
-BASE_PATH=$(dirname "$0")
+command_exists() {
+  command -v "$@" > /dev/null 2>&1
+}
 
-$BASE_PATH/scripts/get_terraform.sh
-$BASE_PATH/scripts/generate_aws_keypem.sh $VSC_KEY
+get_terraform() {
+  terraform_version="0.11.13"
+
+  installed_version=`terraform version 2> /dev/null | \
+    sed -n '/Terraform v/p' | \
+	  sed 's/Terraform v//'`
+
+  if command_exists terraform && [ "$installed_version" = "$terraform_version" ]; then 
+    echo "Already terraform installed..."
+  else
+    curl -o terraform.zip \
+      https://releases.hashicorp.com/terraform/$terraform_version/terraform_${terraform_version}_linux_amd64.zip
+
+    unzip terraform.zip
+
+    mv terraform /usr/local/bin/
+    rm terraform.zip
+
+    echo "Terraform install was successful..."
+  fi
+}
+
+generate_aws_keypem() {
+  key_path=$HOME/.ssh/$VSC_KEY
+
+  rm -f $key_path $key_path.pub &> /dev/null
+
+  ssh-keygen -t rsa -b 4096 -f $key_path -N "" &> /dev/null
+
+  echo "Pem created successful on $key_path"
+}
 
 do_provisioning() {
+  get_terraform
+  generate_aws_keypem
+
+  base_path=$(dirname "$0")
+
   bash_c='bash -c'
-  $bash_c "cd $BASE_PATH/infrastructures/aws && \
+  $bash_c "cd $base_path/infrastructures/aws && \
     terraform init > /dev/null && \
     terraform plan"
 
@@ -48,7 +84,7 @@ do_provisioning() {
     exit 1
   fi
 
-  $bash_c "cd $BASE_PATH/infrastructures/aws && \
+  $bash_c "cd $base_path/infrastructures/aws && \
     terraform apply -auto-approve \
     -var ec2_key_name=$VSC_KEY \
     -var vsc_password=$VSC_PASSWORD \
