@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Depend on linux
 if [ -z "$VSC_PASSWORD" ]; then
   echo "Require VSC_PASSWORD env!"
   exit 1
@@ -36,7 +37,7 @@ command_exists() {
   command -v "$@" > /dev/null 2>&1
 }
 
-get_terraform() {
+ensure_terraform() {
   terraform_version="0.11.13"
 
   installed_version=`terraform version 2> /dev/null | \
@@ -46,13 +47,13 @@ get_terraform() {
   if command_exists terraform && [ "$installed_version" = "$terraform_version" ]; then 
     echo "Already terraform installed..."
   else
-    curl -o terraform.zip \
+    curl -o /tmp/terraform.zip \
       https://releases.hashicorp.com/terraform/$terraform_version/terraform_${terraform_version}_linux_amd64.zip
 
-    unzip terraform.zip
+    unzip /tmp/terraform.zip -d /tmp/
 
-    mv terraform /usr/local/bin/
-    rm terraform.zip
+    mv /tmp/terraform /usr/local/bin/
+    rm /tmp/terraform.zip
 
     echo "Terraform install was successful..."
   fi
@@ -69,7 +70,7 @@ generate_aws_keypem() {
 }
 
 do_provisioning() {
-  get_terraform
+  ensure_terraform
   generate_aws_keypem
 
   base_path=$(dirname "$0")
