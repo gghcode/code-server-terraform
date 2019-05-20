@@ -1,6 +1,6 @@
 variable "ec2_instance_type" {
     type = "string"
-    default = "t2.micro"
+    default = "t2.medium"
 }
 
 variable "ec2_ami" {
