@@ -1,11 +1,17 @@
 [Unit]
 Description=VSCode server
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
 
 [Service]
 Type=simple
 EnvironmentFile=/etc/code-server/code-server.conf
-ExecStart=/usr/local/bin/code-server -H -p $PORT -d /root/.config/Code --cert $CERT_PATH --cert-key $CERT_KEY_PATH --disable-telemetry
-Restart=always
+ExecStart=/usr/local/bin/code-server -H -p $PORT -d /root/.config/Code --disable-telemetry
+WorkingDirectory=/root
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target

@@ -19,22 +19,10 @@ if [ "$?" -ne "0" ]; then
   exit 1
 fi
 
-# Generate ssl certificate for security
-certPath=/etc/ssl/certs/MyCertificate.crt
-certKeyPath=/etc/ssl/certs/MyKey.key
-
-$BASE_PATH/generate_cert.sh $certPath $certKeyPath
-if [ "$?" -ne "0" ]; then
-  echo "ssl certificate generate failed..."
-  exit 1
-fi
-
 # Setup app conf
 mkdir -p /etc/code-server
 echo "PASSWORD=$VSC_PASSWORD" >> /etc/code-server/code-server.conf
 echo "PORT=$VSC_PORT" >> /etc/code-server/code-server.conf
-echo "CERT_PATH=$certPath" >> /etc/code-server/code-server.conf
-echo "CERT_KEY_PATH=$certKeyPath" >> /etc/code-server/code-server.conf
 
 # Copy service file
 cp $HOME_PATH/system/code.service /etc/systemd/system/
