@@ -1,17 +1,11 @@
-#!/bin/sh
-baseDir=$(dirname "$0")
+#!/usr/bin/env bash
+BASE_PATH=$(dirname "$0")
+CODE_CONFIG_PATH=$HOME/.config/Code
 
-certPath=/etc/ssl/certs/MyCertificate.crt
-certKeyPath=/etc/ssl/certs/MyKey.key
-# certPath=~/certs/MyCertificate.crt
-# certKeyPath=~/certs/MyKey.key
-codeConfigPath=$HOME/.config/Code
+$BASE_PATH/get_code_server.sh
 
-sh $baseDir/generate_cert.sh $certPath $certKeyPath
-sh $baseDir/get_code_server.sh
-
-code-server -H -p $CODE_SERVER_PORT -d $codeConfigPath --cert=$certPath --cert-key=$certKeyPath --disable-telemetry
-if [ "$?" -ne "0" ]; then
+code-server -H -p $CODE_SERVER_PORT -d $CODE_CONFIG_PATH --disable-telemetry
+if [ $? -ne 0 ]; then
   echo "code-server start failed..."
-  exit 5
+  exit 1
 fi
