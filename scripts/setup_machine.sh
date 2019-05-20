@@ -41,41 +41,9 @@ get_docker() {
     echo "[$DATE] Docker install was successful..."
 }
 
-DEFAULT_NGINX_VERSION="1.14.*"
-if [ -z "$NGINX_VERSION" ]; then
-    NGINX_VERSION=$DEFAULT_NGINX_VERSION
-fi
-
-BASE_PATH=$(dirname $0)
-HOME_PATH=$(dirname $BASE_PATH)
-
-get_nginx() {
-    echo "[$DATE] Nginx installing..."
-
-    add-apt-repository -y ppa:nginx/stable &> /dev/null
-
-    apt-get -y update &> /dev/null
-    apt-get install -y nginx=$NGINX_VERSION &> /dev/null
-
-    cp $HOME_PATH/nginx/nginx.conf /etc/nginx/nginx.conf
-    # ln -s /etc/nginx/sites-available/hennesis.com /etc/nginx/sites-enabled/hennesis.com
-
-    rm /etc/nginx/sites-available/default
-
-    systemctl enable nginx
-    systemctl start nginx
-
-    
-
-    # systemctl reload nginx
-
-    echo "[$DATE] Nginx install was successful..."
-}
-
 do_setup() {
     get_git
     get_docker
-    get_nginx
 }
 
 do_setup
