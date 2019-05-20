@@ -57,45 +57,22 @@ get_nginx() {
     apt-get -y update &> /dev/null
     apt-get install -y nginx=$NGINX_VERSION &> /dev/null
 
+    cp $HOME_PATH/nginx/nginx.conf /etc/nginx/nginx.conf
+    # ln -s /etc/nginx/sites-available/hennesis.com /etc/nginx/sites-enabled/hennesis.com
+
+    rm /etc/nginx/sites-available/default
+
     systemctl enable nginx
     systemctl start nginx
+
+    
+
+    # systemctl reload nginx
 
     echo "[$DATE] Nginx install was successful..."
 }
 
-DEFAULT_CERT_PATH="/etc/ssl/certs"
-if [ -z "VSC_CERT_PATH" ]; then
-    VSC_CERT_PATH=$DEFAULT_CERT_PATH
-fi
-
-CODE_CERT="$VSC_CERT_PATH/code.crt"
-CODE_CERT_KEY="$VSC_CERT_PATH/code.key"
-
-generate_cert() {
-    echo "[$DATE] Certificate generating for SSL..."
-
-    cert_subj="/C=KR/ST=/L=/O=Gyuhwan/OU=/CN=ghcode.dev"
-
-    if [ -f "$CODE_CERT" ]; then
-        if [ -f "$CODE_CERT_KEY" ]; then
-            echo "Skip process because exists certificate..."
-            exit 0
-        fi
-    fi
-
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-        -keyout $CODE_CERT_KEY -out $CODE_CERT -subj $cert_subj
-    if [ "$?" -ne "0" ]; then
-        echo "certificate generate failed..."
-        exit 1
-    fi
-
-    echo "[$DATE] Certificate generated..."
-}
-
 do_setup() {
-    generate_cert
-
     get_git
     get_docker
     get_nginx
