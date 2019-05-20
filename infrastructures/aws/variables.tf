@@ -20,18 +20,10 @@ variable "ec2_key_name" {
     default = "my_workspace_admin"
 }
 
-variable "src_scripts_dir" {
+variable "src_path_scripts" {
     default = "../../scripts/"
 }
 
-variable "src_bootstrap_sh" {
-    default = "../../scripts/provision-remote-vsc.sh"
-}
-
-variable "src_service_template" {
+variable "src_path_service" {
     default = "../../system/code.service"
-}
-
-variable "docker_package" {
-    default = "18.06.1~ce~3-0~ubuntu"
 }
