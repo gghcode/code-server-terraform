@@ -1,9 +1,9 @@
 output "ip" {
-    value = "${aws_instance.my_workspace_ec2.*.public_ip}"
+    value = "${aws_eip.my_workspace_eip.public_ip}"
 }
 
 output "dns" {
-    value = "${aws_instance.my_workspace_ec2.*.public_dns}"
+    value = "${aws_eip.my_workspace_eip.public_dns}"
 }
 
 output "instance_id" {

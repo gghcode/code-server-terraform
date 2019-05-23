@@ -50,6 +50,11 @@ data "aws_security_group" "default" {
   name = "default"
 }
 
+resource "aws_eip" "my_workspace_eip" {
+  instance = "${aws_instance.my_workspace_ec2.id}"
+  vpc      = true
+}
+
 resource "aws_instance" "my_workspace_ec2" {
   ami = "${var.ec2_ami}" # Amazon Linux AMI 2017.03.1 Seoul
   instance_type = "${var.ec2_instance_type}"
