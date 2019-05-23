@@ -13,16 +13,20 @@ def handler(event, context):
     if instance_id is None:
         raise Exception('Require INSTANCE_ID env...')
 
-    if not 'action' in event:
-        raise Exception('Require action argument...')
+    if not 'body' in event:
+        raise Exception('Require body payload...')
+        
+    body = event['body'] if isinstance(event['body'], dict) else json.loads(event['body'])
+    if not 'action' in body:
+        raise Exception('Require action field...')
 
     ec2 = boto3.client('ec2')
-    if event['action'] in actionFunctions:
-        actionFunctions[event['action']](ec2)
+    if body['action'] in actionFunctions:
+        actionFunctions[body['action']](ec2)
     else:
         raise Exception('Not allowed action...')
     
     return {
         'statusCode': 200,
-        'body': json.dumps('EC2 {} successful...'.format(event['action']))
+        'body': json.dumps('EC2 {} successful...'.format(body['action']))
     }
