@@ -1,22 +1,24 @@
 resource "aws_key_pair" "my_workspace_admin" {
-  key_name = "my_workspace_admin"
+  key_name   = "my_workspace_admin"
   public_key = "${file("${var.ec2_key_dir}/${var.ec2_key_name}.pub")}"
 }
 
 resource "aws_security_group" "ssh" {
-  name = "allow_ssh_from_all"
+  name        = "allow_ssh_from_all"
   description = "Allow SSH port from all"
+
   ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
 resource "aws_security_group" "http" {
-  name = "allow_http_from_all"
+  name        = "allow_http_from_all"
   description = "Allow http port from all"
+
   # ingress {
   #   from_port = 80
   #   to_port = 80
@@ -37,7 +39,6 @@ resource "aws_security_group" "http" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
   egress {
     from_port   = 0
     to_port     = 65535
@@ -56,13 +57,14 @@ resource "aws_eip" "my_workspace_eip" {
 }
 
 resource "aws_instance" "my_workspace_ec2" {
-  ami = "${var.ec2_ami}" # Amazon Linux AMI 2017.03.1 Seoul
+  ami           = "${var.ec2_ami}"                              # Amazon Linux AMI 2017.03.1 Seoul
   instance_type = "${var.ec2_instance_type}"
-  key_name = "${aws_key_pair.my_workspace_admin.key_name}"
+  key_name      = "${aws_key_pair.my_workspace_admin.key_name}"
+
   vpc_security_group_ids = [
     "${aws_security_group.ssh.id}",
     "${aws_security_group.http.id}",
-    "${data.aws_security_group.default.id}"
+    "${data.aws_security_group.default.id}",
   ]
 
   connection {
@@ -75,17 +77,17 @@ resource "aws_instance" "my_workspace_ec2" {
   provisioner "remote-exec" {
     inline = [
       "mkdir -p ~/scripts",
-      "mkdir -p ~/system"
+      "mkdir -p ~/system",
     ]
   }
 
   provisioner "file" {
-    source = "${var.src_path_scripts}"
+    source      = "${var.src_path_scripts}"
     destination = "/home/${var.ec2_default_user}/scripts/"
   }
 
   provisioner "file" {
-    source = "${var.src_path_service}"
+    source      = "${var.src_path_service}"
     destination = "/home/${var.ec2_default_user}/system/code.service"
   }
 
@@ -93,7 +95,7 @@ resource "aws_instance" "my_workspace_ec2" {
     inline = [
       "chmod +x /home/${var.ec2_default_user}/scripts/*sh",
       "sudo ~/scripts/setup_machine.sh",
-      "VSC_PASSWORD=${var.vsc_password} VSC_PORT=${var.vsc_port} sudo -E ~/scripts/bootstrap_code_server.sh"
+      "VSC_PASSWORD=${var.vsc_password} VSC_PORT=${var.vsc_port} sudo -E ~/scripts/bootstrap_code_server.sh",
     ]
   }
 }

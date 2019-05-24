@@ -1,7 +1,7 @@
 variable "vsc_password" {
-    default = ""
+  default = ""
 }
 
 variable "vsc_port" {
-    default = "80"
+  default = "80"
 }
