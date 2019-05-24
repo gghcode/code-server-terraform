@@ -5,3 +5,6 @@ goorm.manifest
 .terraform/
 terraform.tfstate*
 provider.tf
+
+# Temp file
+ec2_scheduler.zip
