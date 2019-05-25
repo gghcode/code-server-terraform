@@ -4,7 +4,7 @@ data "archive_file" "sources" {
   output_path = "ec2_scheduler.zip"
 }
 
-resource "aws_iam_role" "ec2_scheduler_role" {
+resource "aws_iam_role" "this" {
   name = "ec2_scheduler_role"
 
   assume_role_policy = <<EOF
@@ -24,7 +24,7 @@ resource "aws_iam_role" "ec2_scheduler_role" {
 EOF
 }
 
-data "aws_iam_policy_document" "ec2_scheduler" {
+data "aws_iam_policy_document" "this" {
   statement {
     actions = [
       "ec2:DescribeInstances",
@@ -39,18 +39,18 @@ data "aws_iam_policy_document" "ec2_scheduler" {
   }
 }
 
-resource "aws_iam_policy" "scheduler_aws_lambda_basic_execution_role" {
-  policy = "${data.aws_iam_policy_document.ec2_scheduler.json}"
+resource "aws_iam_policy" "this" {
+  policy = "${data.aws_iam_policy_document.this.json}"
 }
 
-resource "aws_iam_role_policy_attachment" "basic-exec-role" {
-  role       = "${aws_iam_role.ec2_scheduler_role.name}"
-  policy_arn = "${aws_iam_policy.scheduler_aws_lambda_basic_execution_role.arn}"
+resource "aws_iam_role_policy_attachment" "this" {
+  role       = "${aws_iam_role.this.name}"
+  policy_arn = "${aws_iam_policy.this.arn}"
 }
 
-resource "aws_lambda_function" "ec2_schedule_lambda" {
+resource "aws_lambda_function" "this" {
   function_name    = "ec2_schedule_lambda"
-  role             = "${aws_iam_role.ec2_scheduler_role.arn}"
+  role             = "${aws_iam_role.this.arn}"
   filename         = "ec2_scheduler.zip"
   handler          = "ec2_scheduler.handler"
   runtime          = "python3.7"
