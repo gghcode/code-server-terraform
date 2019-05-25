@@ -1,3 +1,11 @@
+variable "pem_key_path" {
+  default = "~/.ssh"
+}
+
+variable "pem_key_name" {
+  default = "my_workspace_admin"
+}
+
 variable "instance_type" {
   type    = "string"
   default = "t2.medium"
@@ -8,22 +16,23 @@ variable "ami" {
   default = "ami-067c32f3d5b9ace91"
 }
 
-variable "ec2_default_user" {
+variable "ssh_username" {
   default = "ubuntu"
 }
 
-variable "pem_key_path" {
-  default = "~/.ssh"
-}
-
-variable "pem_key_name" {
-  default = "my_workspace_admin"
-}
-
-variable "src_path_scripts" {
+variable "src_scripts_dir_path" {
   default = "../../scripts/"
 }
 
-variable "src_path_service" {
+variable "src_services_dir_path" {
   default = "../../system/code.service"
+}
+
+# VSC Variables
+variable "vsc_password" {
+  default = ""
+}
+
+variable "vsc_port" {
+  default = "80"
 }

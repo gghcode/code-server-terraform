@@ -47,15 +47,6 @@ resource "aws_security_group" "http" {
   }
 }
 
-data "aws_security_group" "default" {
-  name = "default"
-}
-
-resource "aws_eip" "this" {
-  instance = "${aws_instance.my_workspace_ec2.id}"
-  vpc      = true
-}
-
 resource "aws_instance" "my_workspace_ec2" {
   ami           = "${var.ami}"                              # Amazon Linux AMI 2017.03.1 Seoul
   instance_type = "${var.instance_type}"
@@ -63,12 +54,11 @@ resource "aws_instance" "my_workspace_ec2" {
 
   vpc_security_group_ids = [
     "${aws_security_group.ssh.id}",
-    "${aws_security_group.http.id}",
-    # "${data.aws_security_group.default.id}",
+    "${aws_security_group.http.id}"
   ]
 
   connection {
-    user        = "${var.ec2_default_user}"
+    user        = "${var.ssh_username}"
     type        = "ssh"
     private_key = "${file("${var.pem_key_path}/${var.pem_key_name}")}"
     timeout     = "5m"
@@ -82,20 +72,25 @@ resource "aws_instance" "my_workspace_ec2" {
   }
 
   provisioner "file" {
-    source      = "${var.src_path_scripts}"
-    destination = "/home/${var.ec2_default_user}/scripts/"
+    source      = "${var.src_scripts_dir_path}"
+    destination = "/home/${var.ssh_username}/scripts/"
   }
 
   provisioner "file" {
-    source      = "${var.src_path_service}"
-    destination = "/home/${var.ec2_default_user}/system/code.service"
+    source      = "${var.src_services_dir_path}"
+    destination = "/home/${var.ssh_username}/system/code.service"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /home/${var.ec2_default_user}/scripts/*sh",
+      "chmod +x /home/${var.ssh_username}/scripts/*sh",
       "sudo ~/scripts/setup_machine.sh",
       "VSC_PASSWORD=${var.vsc_password} VSC_PORT=${var.vsc_port} sudo -E ~/scripts/bootstrap_code_server.sh",
     ]
   }
+}
+
+resource "aws_eip" "this" {
+  instance = "${aws_instance.my_workspace_ec2.id}"
+  vpc      = true
 }
