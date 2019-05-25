@@ -58,7 +58,7 @@ resource "aws_lambda_function" "ec2_schedule_lambda" {
 
   environment {
     variables = {
-      INSTANCE_ID = "${aws_instance.my_workspace_ec2.id}"
+      INSTANCE_ID = "${aws_instance.this.id}"
     }
   }
 }

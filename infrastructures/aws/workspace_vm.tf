@@ -47,7 +47,7 @@ resource "aws_security_group" "http" {
   }
 }
 
-resource "aws_instance" "my_workspace_ec2" {
+resource "aws_instance" "this" {
   ami           = "${var.ami}"                    # Amazon Linux AMI 2017.03.1 Seoul
   instance_type = "${var.instance_type}"
   key_name      = "${aws_key_pair.this.key_name}"
@@ -91,6 +91,6 @@ resource "aws_instance" "my_workspace_ec2" {
 }
 
 resource "aws_eip" "this" {
-  instance = "${aws_instance.my_workspace_ec2.id}"
+  instance = "${aws_instance.this.id}"
   vpc      = true
 }
