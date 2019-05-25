@@ -25,7 +25,7 @@ variable "src_scripts_dir_path" {
 }
 
 variable "src_services_dir_path" {
-  default = "../../system/code.service"
+  default = "../../system/"
 }
 
 # VSC Variables

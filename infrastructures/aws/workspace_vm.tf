@@ -73,17 +73,17 @@ resource "aws_instance" "this" {
 
   provisioner "file" {
     source      = "${var.src_scripts_dir_path}"
-    destination = "/home/${var.ssh_username}/scripts/"
+    destination = "~/scripts/"
   }
 
   provisioner "file" {
     source      = "${var.src_services_dir_path}"
-    destination = "/home/${var.ssh_username}/system/code.service"
+    destination = "~/system/"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /home/${var.ssh_username}/scripts/*sh",
+      "chmod +x ~/scripts/*sh",
       "sudo ~/scripts/setup_machine.sh",
       "VSC_PASSWORD=${var.vsc_password} VSC_PORT=${var.vsc_port} sudo -E ~/scripts/bootstrap_code_server.sh",
     ]
