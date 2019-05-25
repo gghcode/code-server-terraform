@@ -48,13 +48,13 @@ resource "aws_security_group" "http" {
 }
 
 resource "aws_instance" "my_workspace_ec2" {
-  ami           = "${var.ami}"                              # Amazon Linux AMI 2017.03.1 Seoul
+  ami           = "${var.ami}"                    # Amazon Linux AMI 2017.03.1 Seoul
   instance_type = "${var.instance_type}"
   key_name      = "${aws_key_pair.this.key_name}"
 
   vpc_security_group_ids = [
     "${aws_security_group.ssh.id}",
-    "${aws_security_group.http.id}"
+    "${aws_security_group.http.id}",
   ]
 
   connection {
