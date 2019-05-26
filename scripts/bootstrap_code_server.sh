@@ -23,6 +23,7 @@ fi
 mkdir -p /etc/code-server
 echo "PASSWORD=$VSC_PASSWORD" >> /etc/code-server/code-server.conf
 echo "PORT=$VSC_PORT" >> /etc/code-server/code-server.conf
+echo "HOME=/root" >> /etc/code-server/code-server.conf
 
 # Copy service file
 cp $HOME_PATH/system/code.service /etc/systemd/system/
