@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-CODE_SERVER_VERSION="1.939-vsc1.33.1"
+CODE_SERVER_VERSION="1.1119-vsc1.33.1"
 SRC_FILE="code-server$CODE_SERVER_VERSION-linux-x64"
 ZIP_FILE="$SRC_FILE.tar.gz"
 
