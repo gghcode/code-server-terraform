@@ -115,6 +115,17 @@ resource "aws_instance" "this" {
   }
 }
 
+resource "aws_ebs_volume" "this" {
+  availability_zone = "ap-northeast-2"
+  size              = 10
+}
+
+resource "aws_volume_attachment" "this" {
+  device_name = "/dev/user"
+  volume_id   = "${aws_ebs_volume.this.id}"
+  instance_id = "${aws_instance.this.id}"
+}
+
 resource "aws_eip" "this" {
   instance = "${aws_instance.this.id}"
   vpc      = true
