@@ -19,29 +19,52 @@ resource "aws_security_group" "http" {
   name        = "allow_http_from_all"
   description = "Allow http port from all"
 
-  # ingress {
-  #   from_port = 80
-  #   to_port = 80
-  #   protocol = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-  # egress {
-  #   from_port = 80
-  #   to_port = 80
-  #   protocol = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "https" {
+  name        = "allow_https_from_all"
+  description = "Allow https port from all"
+
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "dev" {
+  name        = "allow_dev_from_all"
+  description = "Allow ports for develop from all"
 
   # Allow all inbound
   ingress {
-    from_port   = 0
-    to_port     = 65535
+    from_port   = 8080
+    to_port     = 9000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
-    from_port   = 0
-    to_port     = 65535
+    from_port   = 8080
+    to_port     = 9000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -55,6 +78,8 @@ resource "aws_instance" "this" {
   vpc_security_group_ids = [
     "${aws_security_group.ssh.id}",
     "${aws_security_group.http.id}",
+    "${aws_security_group.https.id}",
+    "${aws_security_group.dev.id}",
   ]
 
   connection {
