@@ -21,6 +21,7 @@ fi
 
 # Setup app conf
 mkdir -p /etc/code-server
+mkdir -p /root/workspace
 echo "PASSWORD=$VSC_PASSWORD" >> /etc/code-server/code-server.conf
 echo "PORT=$VSC_PORT" >> /etc/code-server/code-server.conf
 echo "HOME=/root" >> /etc/code-server/code-server.conf

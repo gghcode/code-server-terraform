@@ -7,7 +7,7 @@ Wants=network-online.target systemd-networkd-wait-online.service
 Type=simple
 EnvironmentFile=/etc/code-server/code-server.conf
 ExecStart=/bin/bash -c "HOME=/root; /usr/local/bin/code-server -H -p $PORT -d $HOME/.config/Code --disable-telemetry"
-WorkingDirectory=/home/ubuntu
+WorkingDirectory=/root/workspace
 LimitNOFILE=infinity
 LimitNPROC=infinity
 LimitCORE=infinity
