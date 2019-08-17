@@ -1,0 +1,8 @@
+- name: Ubuntu based Code-Server
+  hosts: all
+  roles:
+    # - node
+    # - python
+    # - go
+    - docker
+    # - nginx
