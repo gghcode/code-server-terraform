@@ -1,0 +1,35 @@
+{
+    "variables": {
+        "name": "Code Server v{{isotime \"060102-1504\"}}",
+        "source_ami": "ami-0a25005e83c56767a",
+        "access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+        "secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+        "region": "{{env `AWS_DEFAULT_REGION`}}",
+        "ssh_username": "ubuntu" 
+    },
+    "builders": [{
+        "type": "amazon-ebs",
+        "access_key": "{{user `access_key`}}",
+        "secret_key":"{{user `secret_key`}}",
+        "ami_name": "{{user `name`}}",
+        "region": "{{user `region`}}",
+        "source_ami": "{{user `source_ami`}}",
+        "instance_type": "t3.micro",
+        "communicator": "ssh",
+        "ssh_username": "{{user `ssh_username`}}",
+        "run_tags":{"Name":"packer-image"},
+        "tags": {
+            "Name": "{{user `source_ami` | clean_ami_name}}",
+            "BaseAMI_Id": "{{ .SourceAMI }}",
+            "BaseAMI_Name": "{{ .SourceAMIName }}",
+            "TYPE": "EC2.ami"
+        }
+    }],
+    "provisioners": [
+        {
+            "type": "ansible",
+            "user": "{{user `ssh_username`}}",
+            "playbook_file": "playbook/main.yml"
+        }
+    ]
+}
