@@ -1,12 +1,10 @@
-- name: Ubuntu based Code-Server
+- name: Ubuntu based Code-Server minimal
   hosts: all
   become: true
-  gather_facts: yes
   vars:
     oh_my_zsh_theme: robbyrussell
     oh_my_zsh_plugins:
       - git
-      - docker
       - zsh-autosuggestions
       - zsh-syntax-highlighting
     
@@ -16,9 +14,8 @@
     - git
     - gantsign.oh-my-zsh
     - zsh
-    - docker
-    - node
     - geerlingguy.packer
     - andrewrothstein.terraform
+    - mini-workspace
     - code-server
     
