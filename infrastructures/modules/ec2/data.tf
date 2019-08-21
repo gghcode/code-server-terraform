@@ -9,13 +9,24 @@ data "terraform_remote_state" "sg" {
   }
 }
 
+data "terraform_remote_state" "api_gateway" {
+  backend = "remote"
+  config = {
+    organization = "gghcode-server"
+
+    workspaces = {
+      name = "api-gateway"
+    }
+  }
+}
+
 data "terraform_remote_state" "eip" {
   backend = "remote"
   config = {
     organization = "gghcode-server"
 
     workspaces = {
-      name = "eip-mini"
+      name = "eip-${terraform.workspace}"
     }
   }
 }

@@ -20,6 +20,14 @@ resource "aws_eip_association" "this" {
   allocation_id = "${data.terraform_remote_state.eip.outputs.eip_id}"
 }
 
+resource "aws_api_gateway_deployment" "this" {
+  rest_api_id = "${data.terraform_remote_state.api_gateway.outputs.rest_api_id}"
+  stage_name  = "${terraform.workspace}"
+  variables = {
+    "instance_id" = "${aws_instance.this.id}"
+  }
+}
+
 resource "null_resource" "preparation" {
   triggers = {
     instance = "${aws_instance.this.id}"
