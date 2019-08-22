@@ -30,3 +30,14 @@ data "terraform_remote_state" "eip" {
     }
   }
 }
+
+data "terraform_remote_state" "api_gateway_deployment" {
+  backend = "remote"
+  config = {
+    organization = "gghcode-server"
+
+    workspaces = {
+      name = "api-gateway-deployment-${terraform.workspace}"
+    }
+  }
+}

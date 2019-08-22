@@ -12,5 +12,5 @@ output "public_ip" {
 }
 
 output "lambda_dns" {
-  value = "${aws_api_gateway_deployment.this.invoke_url}"
+  value = "${aws_api_gateway_stage.this.invoke_url}"
 }
