@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  unit-test:
+    docker: 
+      - image: 3.7.4-alpine3.10
+    steps:
+      - checkout
+      - restore_cache:
+          key: python-requirements-{{ checksum "requirements.txt" }}
+          
+      - run: pip install -r requirements.txt
+      - run: python src/test_ec2_sheduler.py
+
+      - save_cache:
+          key: python-requirements-{{ checksum "requirements.txt" }}
+          paths:
+            - "~/.cache/pip"
+
+workflows:
+  version: 2
+  pipeline:
+    jobs:
+      - unit-test
