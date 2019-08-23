@@ -2,7 +2,7 @@ version: 2
 jobs:
   unit-test:
     docker: 
-      - image: 3.7.4-alpine3.10
+      - image: circleci/python:3.6.9
     steps:
       - checkout
       - restore_cache:
