@@ -22,5 +22,6 @@ module "ec2" {
   instance_type = "${var.instance_type}"
   block_size    = "${var.block_size}"
 
-  domain = "${var.domain}"
+  domain               = "${var.domain}"
+  code_server_password = "${var.code_server_password}"
 }

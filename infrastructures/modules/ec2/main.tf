@@ -21,22 +21,14 @@ resource "aws_eip_association" "this" {
 }
 
 resource "aws_api_gateway_stage" "this" {
-  rest_api_id = "${data.terraform_remote_state.api_gateway.outputs.rest_api_id}"
-  stage_name = "${terraform.workspace}"
+  rest_api_id   = "${data.terraform_remote_state.api_gateway.outputs.rest_api_id}"
+  stage_name    = "${terraform.workspace}"
   deployment_id = "${data.terraform_remote_state.api_gateway_deployment.outputs.id}"
 
   variables = {
     "instance_id" = "${aws_instance.this.id}"
   }
 }
-
-# resource "aws_api_gateway_deployment" "this" {
-#   rest_api_id = "${data.terraform_remote_state.api_gateway.outputs.rest_api_id}"
-#   stage_name  = "${terraform.workspace}"
-#   variables = {
-#     "instance_id" = "${aws_instance.this.id}"
-#   }
-# }
 
 resource "null_resource" "preparation" {
   triggers = {
@@ -56,6 +48,8 @@ resource "null_resource" "preparation" {
       "sudo echo >> /etc/code-server/env",
       "sudo echo TLS_CERT=/etc/letsencrypt/live/${var.domain}/fullchain.pem >> /etc/code-server/env",
       "sudo echo TLS_KEY=/etc/letsencrypt/live/${var.domain}/privkey.pem >> /etc/code-server/env",
+      "sudo echo PORT=${var.code_server_port} >> /etc/code-server/env",
+      "sudo echo PASSWORD=${var.code_server_password} >> /etc/code-server/env",
       "sudo systemctl start code-server --no-block",
     ]
   }

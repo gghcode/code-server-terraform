@@ -8,7 +8,3 @@
     # We mark the service as Type=notify to auto restart it routinely,
     # but it's actually Type=simple, so "no_block: yes" here to avoid stuck.
     no_block: yes
-
-- name: Generate ssl certificate
-  become: yes
-  shell: certbot certonly --standalone -d {{ domain }} --non-interactive --agree-tos -m {{ email }} --preferred-challenges http

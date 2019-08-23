@@ -45,3 +45,14 @@ variable "domain" {
   type        = "string"
   description = "Domain for certbot"
 }
+
+variable "code_server_port" {
+  default     = 443
+  description = "Port of Code Server"
+}
+
+variable "code_server_password" {
+  type        = "string"
+  description = "Password of Code Server"
+}
+

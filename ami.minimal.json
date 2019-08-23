@@ -5,17 +5,13 @@
         "access_key": "{{ env `AWS_ACCESS_KEY_ID` }}",
         "secret_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
         "region": "{{ env `AWS_DEFAULT_REGION` }}",
-        "ssh_username": "ubuntu",
-        "code_server_password": null,
-        "code_server_port": null
+        "ssh_username": "ubuntu"
     },
     "sensitive-variables": [
         "access_key", 
         "secret_key",
-        "ssh_username",
-        "code_server_password",
-        "code_server_port",
-        "domain"
+        "region",
+        "ssh_username"
     ],
     "builders": [{
         "type": "amazon-ebs",
@@ -32,13 +28,7 @@
         {
             "type": "ansible",
             "user": "{{user `ssh_username`}}",
-            "playbook_file": "playbook/minimal.yml",
-            "extra_arguments": [
-                "--extra-vars", 
-                "code_server_password={{ user `code_server_password` }}",
-                "--extra-vars",
-                "code_server_port={{ user `code_server_port` }}"
-            ]
+            "playbook_file": "playbook/minimal.yml"
         }
     ]
 }

@@ -35,5 +35,10 @@ variable "block_size" {
 variable "domain" {
   type        = "string"
   description = "Domain"
-  default     = "m.ghcode.dev"
 }
+
+variable "code_server_password" {
+  type        = "string"
+  description = "Password of Code Server"
+}
+
