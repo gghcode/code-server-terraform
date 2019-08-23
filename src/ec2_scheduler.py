@@ -7,8 +7,6 @@ KEY_INSTANCE_ID = 'instance_id'
 KEY_JSON_BODY = 'body'
 KEY_ACTION = 'action'
 
-ec2 = boto3.client('ec2')
-
 actionFunctions = {
     "start": lambda ec2, instance_id: ec2.start_instances(InstanceIds=[instance_id]),
     "stop": lambda ec2, instance_id: ec2.stop_instances(InstanceIds=[instance_id]),
@@ -25,7 +23,7 @@ def handler(event, context):
             raise Exception('Not allowed action...')
 
         actionFunc = actionFunctions[action]
-        actionFunc(ec2, instance_id_from_event(event))
+        actionFunc(ec2client(), instance_id_from_event(event))
         
         return {
             'statusCode': 200,
@@ -40,6 +38,9 @@ def handler(event, context):
                 "err": str(ex)
             })
         }
+
+def ec2client():
+    return boto3.client('ec2')
 
 def instance_id_from_event(event):
     if event[KEY_STAGE_VARIABLES] is None or not KEY_INSTANCE_ID in event[KEY_STAGE_VARIABLES]:

@@ -1,7 +1,8 @@
 import json
 import unittest
+import ec2_scheduler
 
-from ec2_scheduler import handler
+from unittest.mock import patch
 
 class HandlerTests(unittest.TestCase):
     def test_thrown_ex_when_not_contain_body(self):
@@ -15,7 +16,7 @@ class HandlerTests(unittest.TestCase):
         event = {}
         context = {}
 
-        actual = handler(event, context)
+        actual = ec2_scheduler.handler(event, context)
 
         self.assertEqual(expected, actual)
     def test_thrown_ex_when_not_contain_action(self):
@@ -27,7 +28,7 @@ class HandlerTests(unittest.TestCase):
         event = { 'body': {} }
         context = {}
 
-        actual = handler(event, context)
+        actual = ec2_scheduler.handler(event, context)
 
         self.assertEqual(expected, actual)
     def test_thrown_ex_when_not_allowed_action(self):
@@ -39,7 +40,7 @@ class HandlerTests(unittest.TestCase):
         event = { 'body': { 'action': 'update' }}
         context = {}
 
-        actual = handler(event, context)
+        actual = ec2_scheduler.handler(event, context)
 
         self.assertEqual(expected, actual)
 
@@ -52,7 +53,7 @@ class HandlerTests(unittest.TestCase):
         event = { 'body': { 'action': 'start' }, 'stageVariables': None }
         context = {}
 
-        actual = handler(event, context)
+        actual = ec2_scheduler.handler(event, context)
 
         self.assertEqual(expected, actual)
 
@@ -65,7 +66,7 @@ class HandlerTests(unittest.TestCase):
         event = { 'body': { 'action': 'start' }, 'stageVariables': {} }
         context = {}
 
-        actual = handler(event, context)
+        actual = ec2_scheduler.handler(event, context)
 
         self.assertEqual(expected, actual)
 
@@ -86,9 +87,10 @@ class HandlerTests(unittest.TestCase):
         
         context = {}
 
-        actual = handler(event, context)
+        actual = ec2_scheduler.handler(event, context)
 
         self.assertEqual(expected, actual)
 
 if __name__ == '__main__':  
-    unittest.main()
+    with patch('ec2_scheduler.ec2client'):
+        unittest.main()
