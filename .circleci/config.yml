@@ -1,5 +1,15 @@
 version: 2
 jobs:
+  terraform-fmt:
+    docker:
+      - image: hashicorp/terraform:0.12.6
+    working_directory: /tmp/workspace/terraform
+    steps:
+      - checkout
+      - run:
+          name: Validate terraform fmt
+          command: terraform fmt -recursive -check
+
   unit-test:
     docker: 
       - image: circleci/python:3.6.9
@@ -22,6 +32,7 @@ jobs:
 
 workflows:
   version: 2
-  pipeline:
+  test-plan-deploy:
     jobs:
+      - terraform-fmt
       - unit-test
