@@ -29,6 +29,31 @@ jobs:
           key: python-requirements-{{ checksum "requirements.txt" }}
           paths:
             - "~/.cache/pip"
+  terraform-plan:
+    docker:
+      - image: hashicorp/terraform:0.12.6
+    working_directory: /tmp/workspace/terraform
+    steps:
+      - checkout
+      # - run:
+      #     name: Download Terragrunt
+      #     command: wget -O /usr/bin/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v0.19.21/terragrunt_linux_amd64
+      # - run: chmod +x /usr/bin/terragrunt
+      - run:
+          name: Create terraform credential
+          command: echo "credentials "app.terraform.io" { token = \"$TF_TOKEN\" }" > ~/.terraformrc
+      # - run:
+      #     name: Terraform plan
+      #     command: terragrunt plan-all --terragrunt-non-interactive
+      - run:
+          name: Terraform api_gateway plan
+          command: sh -c "cd infrastructures/global/api_gateway && terraform init && terraform plan"
+      - run:
+          name: Terraform security_group plan
+          command: sh -c "cd infrastructures/global/security_group && terraform init && terraform plan"
+      - run:
+          name: Terraform lambda plan
+          command: sh -c "cd infrastructures/global/lambda && terraform init && terraform plan"
 
 workflows:
   version: 2
@@ -36,3 +61,7 @@ workflows:
     jobs:
       - terraform-fmt
       - unit-test
+      - terraform-plan:
+          requires:
+            - terraform-fmt
+            - unit-test
