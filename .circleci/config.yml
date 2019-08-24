@@ -29,31 +29,66 @@ jobs:
           key: python-requirements-{{ checksum "requirements.txt" }}
           paths:
             - "~/.cache/pip"
-  terraform-plan:
+  terraform-global-plan:
     docker:
       - image: hashicorp/terraform:0.12.6
     working_directory: /tmp/workspace/terraform
     steps:
       - checkout
-      # - run:
-      #     name: Download Terragrunt
-      #     command: wget -O /usr/bin/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v0.19.21/terragrunt_linux_amd64
-      # - run: chmod +x /usr/bin/terragrunt
       - run:
           name: Create terraform credential
           command: echo "credentials "app.terraform.io" { token = \"$TF_TOKEN\" }" > ~/.terraformrc
-      # - run:
-      #     name: Terraform plan
-      #     command: terragrunt plan-all --terragrunt-non-interactive
       - run:
           name: Terraform api_gateway plan
-          command: sh -c "cd infrastructures/global/api_gateway && terraform init && terraform plan"
+          command: >-
+            sh -c "cd infrastructures/global/api_gateway &&
+            terraform init -input=false &&
+            terraform plan -input=false"
       - run:
           name: Terraform security_group plan
-          command: sh -c "cd infrastructures/global/security_group && terraform init && terraform plan"
+          command: >-
+            sh -c "cd infrastructures/global/security_group &&
+            terraform init -input=false &&
+            terraform plan -input=false"
       - run:
           name: Terraform lambda plan
-          command: sh -c "cd infrastructures/global/lambda && terraform init && terraform plan"
+          command: >-
+            sh -c "cd infrastructures/global/lambda &&
+            terraform init -input=false &&
+            terraform plan -input=false"
+
+  terraform-mini-plan:
+    docker:
+      - image: hashicorp/terraform:0.12.6
+    working_directory: /tmp/workspace/terraform
+    environment:
+      TF_IN_AUTOMATION: true
+      TF_INPUT: false
+      TF_WORKSPACE: mini
+    steps:
+      - checkout
+      - run:
+          name: Create terraform credential
+          command: echo "credentials "app.terraform.io" { token = \"$TF_TOKEN\" }" > ~/.terraformrc
+      - run:
+          name: Terraform api_gateway_deployment plan
+          command: >-
+            sh -c "cd infrastructures/mini/api_gateway_deployment &&
+            echo $TF_WORKSPACE &&
+            terraform init &&
+            terraform plan"
+      - run:
+          name: Terraform eip plan
+          command: >-
+            sh -c "cd infrastructures/mini/eip &&
+            terraform init &&
+            terraform plan"
+      - run:
+          name: Terraform ec2 plan
+          command: >-
+            sh -c "cd infrastructures/mini/ec2 &&
+            terraform init &&
+            terraform plan -var domain=$CODE_SERVER_DOMAIN -var code_server_password=$CODE_SERVER_PASSWORD"
 
 workflows:
   version: 2
@@ -61,7 +96,10 @@ workflows:
     jobs:
       - terraform-fmt
       - unit-test
-      - terraform-plan:
+      - terraform-global-plan:
           requires:
             - terraform-fmt
             - unit-test
+      - terraform-mini-plan:
+          requires:
+            - terraform-global-plan
