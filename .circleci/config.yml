@@ -8,7 +8,7 @@ aliases:
       - checkout
       - *create_terraform_credential
       - run:
-          name: Plan api_gateway
+          name: Terraform api_gateway plan
           command: >-
             sh -c "cd infrastructures/global/api_gateway &&
             terraform init && terraform plan"
@@ -171,4 +171,7 @@ workflows:
           requires: 
             - "Plan mini EIP"
             - "Plan mini Api Gateway Deployment"
+      - "Approve to apply":
+          type: approval
+          requires: *all_plan
       
