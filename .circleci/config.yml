@@ -1,3 +1,32 @@
+aliases:
+  - &create_terraform_credential
+      - run:
+          name: Create terraform credential
+          command: echo "credentials "app.terraform.io" { token = \"$TF_TOKEN\" }" > ~/.terraformrc
+
+  - &plan_api_gateway
+      <<: *create_terraform_credential
+      - checkout
+      - run:
+          name: Plan api_gateway
+          command: >-
+            sh -c "cd infrastructures/global/api_gateway &&
+            terraform init && terraform plan"
+  - &plan_security_group
+      <<: *create_terraform_credential
+      - checkout
+      - run:
+          name: Terraform security_group plan
+          command: >-
+            sh -c "cd infrastructures/global/security_group &&
+            terraform init -input=false &&
+            terraform plan -input=false"
+
+  # Requirement groups
+  - &all_test
+      - terraform-fmt
+      - unit-test
+
 version: 2.1
 executors:
   terraform:
@@ -62,6 +91,9 @@ jobs:
             terraform init -input=false &&
             terraform plan -input=false"
 
+  "Plan Security Group":
+    steps: *plan_security_group
+
   terraform-mini-plan:
     executor: terraform
     environment:
@@ -96,6 +128,9 @@ workflows:
     jobs:
       - terraform-fmt
       - unit-test
+      - "Plan Security Group":
+          requires: *all_test
+
       - terraform-global-plan:
           requires:
             - terraform-fmt
