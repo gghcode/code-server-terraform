@@ -65,8 +65,6 @@ jobs:
   terraform-mini-plan:
     executor: terraform
     environment:
-      TF_IN_AUTOMATION: true
-      TF_INPUT: false
       TF_WORKSPACE: mini
     steps:
       - checkout
