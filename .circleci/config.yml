@@ -1,8 +1,8 @@
 aliases:
   - &create_terraform_credential
-      - run:
-          name: Create terraform credential
-          command: echo "credentials "app.terraform.io" { token = \"$TF_TOKEN\" }" > ~/.terraformrc
+      run:
+        name: Create terraform credential
+        command: echo "credentials "app.terraform.io" { token = \"$TF_TOKEN\" }" > ~/.terraformrc
 
   - &plan_api_gateway
       - checkout
