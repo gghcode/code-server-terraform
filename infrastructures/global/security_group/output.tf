@@ -3,4 +3,5 @@ output "security_group_ids" {
     "${aws_security_group.ssh.id}",
     "${aws_security_group.all.id}"
   ]
+  sensitive = true
 }

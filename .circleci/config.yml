@@ -12,6 +12,15 @@ aliases:
           command: >-
             sh -c "cd infrastructures/global/api_gateway &&
             terraform init && terraform plan"
+    
+  - &apply_api_gateway
+      - checkout
+      - *create_terraform_credential
+      - run:
+          name: Terraform api_gateway apply
+          command: >-
+            sh -c "cd infrastructures/global/api_gateway &&
+            terraform init && terraform apply -auto-approve"
 
   - &plan_security_group
       - checkout
@@ -20,8 +29,16 @@ aliases:
           name: Terraform security_group plan
           command: >-
             sh -c "cd infrastructures/global/security_group &&
-            terraform init -input=false &&
-            terraform plan -input=false"
+            terraform init && terraform plan"
+    
+  - &apply_security_group
+      - checkout
+      - *create_terraform_credential
+      - run:
+          name: Terraform security_group apply
+          command: >-
+            sh -c "cd infrastructures/global/security_group &&
+            terraform init && terraform apply -auto-approve"
 
   - &plan_lambda
       - checkout
@@ -30,8 +47,16 @@ aliases:
           name: Terraform lambda plan
           command: >-
             sh -c "cd infrastructures/global/lambda &&
-            terraform init -input=false &&
-            terraform plan -input=false"
+            terraform init && terraform plan"
+
+  - &apply_lambda
+      - checkout
+      - *create_terraform_credential
+      - run:
+          name: Terraform lambda apply
+          command: >-
+            sh -c "cd infrastructures/global/lambda &&
+            terraform init && terraform apply -auto-approve"
 
   - &plan_mini_api_gateway_deployment
       - checkout
@@ -40,8 +65,16 @@ aliases:
           name: Terraform api_gateway_deployment plan
           command: >-
             sh -c "cd infrastructures/mini/api_gateway_deployment &&
-            terraform init &&
-            terraform plan"
+            terraform init && terraform plan"
+
+  - &apply_mini_api_gateway_deployment
+      - checkout
+      - *create_terraform_credential
+      - run:
+          name: Terraform api_gateway_deployment apply
+          command: >-
+            sh -c "cd infrastructures/mini/api_gateway_deployment &&
+            terraform init && terraform apply -auto-approve"
 
   - &plan_mini_eip
       - checkout
@@ -50,8 +83,16 @@ aliases:
           name: Terraform eip plan
           command: >-
             sh -c "cd infrastructures/mini/eip &&
-            terraform init &&
-            terraform plan"
+            terraform init && terraform plan"
+
+  - &apply_mini_eip
+      - checkout
+      - *create_terraform_credential
+      - run:
+          name: Terraform eip apply
+          command: >-
+            sh -c "cd infrastructures/mini/eip &&
+            terraform init && terraform apply -auto-approve"
 
   - &plan_mini_ec2
       - checkout
@@ -62,6 +103,18 @@ aliases:
             sh -c "cd infrastructures/mini/ec2 &&
             terraform init &&
             terraform plan -var domain=$CODE_SERVER_DOMAIN -var code_server_password=$CODE_SERVER_PASSWORD"
+
+  - &apply_mini_ec2
+      - checkout
+      - *create_terraform_credential
+      - run:
+          name: Terraform ec2 apply
+          command: >-
+            sh -c "cd infrastructures/mini/ec2 &&
+            terraform init && terraform apply -auto-approve
+            -var domain=$CODE_SERVER_DOMAIN 
+            -var code_server_password=$CODE_SERVER_PASSWORD
+            -var ami=$AWS_AMI"
 
   # Requirement groups
   - &all_test
@@ -80,6 +133,11 @@ aliases:
       - "Plan mini Api Gateway Deployment"
       - "Plan mini EIP"
       - "Plan mini EC2"
+  
+  - &all_global_apply
+      - "Apply Security Group"
+      - "Apply Api Gateway"
+      - "Apply Lambda"
 
 version: 2.1
 executors:
@@ -123,7 +181,7 @@ jobs:
   "Plan Security Group":
     executor: terraform
     steps: *plan_security_group
-  
+
   "Plan Api Gateway":
     executor: terraform
     steps: *plan_api_gateway
@@ -147,6 +205,36 @@ jobs:
   "Plan mini EC2":
     executor: terraform
     steps: *plan_mini_ec2
+    environment:
+      TF_WORKSPACE: mini
+
+  "Apply Security Group":
+    executor: terraform
+    steps: *apply_security_group
+
+  "Apply Api Gateway":
+    executor: terraform
+    steps: *apply_api_gateway
+
+  "Apply Lambda":
+    executor: terraform
+    steps: *apply_lambda
+
+  "Apply mini Api Gateway Deployment":
+    executor: terraform
+    steps: *apply_mini_api_gateway_deployment
+    environment:
+      TF_WORKSPACE: mini
+
+  "Apply mini EIP":
+    executor: terraform
+    steps: *apply_mini_eip
+    environment:
+      TF_WORKSPACE: mini
+
+  "Apply mini EC2":
+    executor: terraform
+    steps: *apply_mini_ec2
     environment:
       TF_WORKSPACE: mini
 
@@ -177,4 +265,18 @@ workflows:
           branches:
             only:
               - master
-      
+      - "Apply Security Group":
+          requires: "Approve to apply"
+      - "Apply Api Gateway":
+          requires: "Approve to apply"
+      - "Apply Lambda":
+          requires: 
+            - "Apply Api Gateway"
+      - "Apply mini Api Gateway Deployment":
+          requires: *all_global_plan
+      - "Apply mini EIP":
+          requires: *all_global_plan
+      - "Apply mini EC2":
+          requires: 
+            - "Apply mini EIP"
+            - "Apply mini Api Gateway Deployment"
