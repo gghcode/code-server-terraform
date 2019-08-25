@@ -1,9 +1,16 @@
 version: 2
-jobs:
-  terraform-fmt:
+executors:
+  terraform:
     docker:
       - image: hashicorp/terraform:0.12.6
     working_directory: /tmp/workspace/terraform
+    environment:
+      TF_IN_AUTOMATION: true
+      TF_INPUT: false
+
+jobs:
+  terraform-fmt:
+    executor: terraform
     steps:
       - checkout
       - run:
@@ -30,9 +37,7 @@ jobs:
           paths:
             - "~/.cache/pip"
   terraform-global-plan:
-    docker:
-      - image: hashicorp/terraform:0.12.6
-    working_directory: /tmp/workspace/terraform
+    executor: terraform
     steps:
       - checkout
       - run:
@@ -58,9 +63,7 @@ jobs:
             terraform plan -input=false"
 
   terraform-mini-plan:
-    docker:
-      - image: hashicorp/terraform:0.12.6
-    working_directory: /tmp/workspace/terraform
+    executor: terraform
     environment:
       TF_IN_AUTOMATION: true
       TF_INPUT: false
@@ -74,7 +77,6 @@ jobs:
           name: Terraform api_gateway_deployment plan
           command: >-
             sh -c "cd infrastructures/mini/api_gateway_deployment &&
-            echo $TF_WORKSPACE &&
             terraform init &&
             terraform plan"
       - run:
