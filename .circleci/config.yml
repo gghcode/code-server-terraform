@@ -12,6 +12,7 @@ aliases:
           command: >-
             sh -c "cd infrastructures/global/api_gateway &&
             terraform init && terraform plan"
+
   - &plan_security_group
       - checkout
       - *create_terraform_credential
@@ -22,10 +23,63 @@ aliases:
             terraform init -input=false &&
             terraform plan -input=false"
 
+  - &plan_lambda
+      - checkout
+      - *create_terraform_credential
+      - run:
+          name: Terraform lambda plan
+          command: >-
+            sh -c "cd infrastructures/global/lambda &&
+            terraform init -input=false &&
+            terraform plan -input=false"
+
+  - &plan_mini_api_gateway_deployment
+      - checkout
+      - *create_terraform_credential
+      - run:
+          name: Terraform api_gateway_deployment plan
+          command: >-
+            sh -c "cd infrastructures/mini/api_gateway_deployment &&
+            terraform init &&
+            terraform plan"
+
+  - &plan_mini_eip
+      - checkout
+      - *create_terraform_credential
+      - run:
+          name: Terraform eip plan
+          command: >-
+            sh -c "cd infrastructures/mini/eip &&
+            terraform init &&
+            terraform plan"
+
+  - &plan_mini_ec2
+      - checkout
+      - *create_terraform_credential
+      - run:
+          name: Terraform ec2 plan
+          command: >-
+            sh -c "cd infrastructures/mini/ec2 &&
+            terraform init &&
+            terraform plan -var domain=$CODE_SERVER_DOMAIN -var code_server_password=$CODE_SERVER_PASSWORD"
+
   # Requirement groups
   - &all_test
-      - terraform-fmt
-      - unit-test
+      - "Terraform fmt"
+      - "Unit Tests"
+  
+  - &all_global_plan
+      - "Plan Security Group"
+      - "Plan Api Gateway"
+      - "Plan Lambda"
+
+  - &all_plan
+      - "Plan Security Group"
+      - "Plan Api Gateway"
+      - "Plan Lambda"
+      - "Plan mini Api Gateway Deployment"
+      - "Plan mini EIP"
+      - "Plan mini EC2"
 
 version: 2.1
 executors:
@@ -38,7 +92,7 @@ executors:
       TF_INPUT: false
 
 jobs:
-  terraform-fmt:
+  "Terraform fmt":
     executor: terraform
     steps:
       - checkout
@@ -46,7 +100,7 @@ jobs:
           name: Validate terraform fmt
           command: terraform fmt -recursive -check
 
-  unit-test:
+  "Unit Tests":
     docker: 
       - image: circleci/python:3.6.9
     steps:
@@ -65,77 +119,56 @@ jobs:
           key: python-requirements-{{ checksum "requirements.txt" }}
           paths:
             - "~/.cache/pip"
-  terraform-global-plan:
-    executor: terraform
-    steps:
-      - checkout
-      - run:
-          name: Create terraform credential
-          command: echo "credentials "app.terraform.io" { token = \"$TF_TOKEN\" }" > ~/.terraformrc
-      - run:
-          name: Terraform api_gateway plan
-          command: >-
-            sh -c "cd infrastructures/global/api_gateway &&
-            terraform init -input=false &&
-            terraform plan -input=false"
-      - run:
-          name: Terraform security_group plan
-          command: >-
-            sh -c "cd infrastructures/global/security_group &&
-            terraform init -input=false &&
-            terraform plan -input=false"
-      - run:
-          name: Terraform lambda plan
-          command: >-
-            sh -c "cd infrastructures/global/lambda &&
-            terraform init -input=false &&
-            terraform plan -input=false"
 
   "Plan Security Group":
     executor: terraform
     steps: *plan_security_group
-
-  terraform-mini-plan:
+  
+  "Plan Api Gateway":
     executor: terraform
+    steps: *plan_api_gateway
+
+  "Plan Lambda":
+    executor: terraform
+    steps: *plan_lambda
+
+  "Plan mini Api Gateway Deployment":
+    executor: terraform
+    steps: *plan_mini_api_gateway_deployment
     environment:
       TF_WORKSPACE: mini
-    steps:
-      - checkout
-      - run:
-          name: Create terraform credential
-          command: echo "credentials "app.terraform.io" { token = \"$TF_TOKEN\" }" > ~/.terraformrc
-      - run:
-          name: Terraform api_gateway_deployment plan
-          command: >-
-            sh -c "cd infrastructures/mini/api_gateway_deployment &&
-            terraform init &&
-            terraform plan"
-      - run:
-          name: Terraform eip plan
-          command: >-
-            sh -c "cd infrastructures/mini/eip &&
-            terraform init &&
-            terraform plan"
-      - run:
-          name: Terraform ec2 plan
-          command: >-
-            sh -c "cd infrastructures/mini/ec2 &&
-            terraform init &&
-            terraform plan -var domain=$CODE_SERVER_DOMAIN -var code_server_password=$CODE_SERVER_PASSWORD"
+
+  "Plan mini EIP":
+    executor: terraform
+    steps: *plan_mini_eip
+    environment:
+      TF_WORKSPACE: mini
+
+  "Plan mini EC2":
+    executor: terraform
+    steps: *plan_mini_ec2
+    environment:
+      TF_WORKSPACE: mini
 
 workflows:
   version: 2
   test-plan-deploy:
     jobs:
-      - terraform-fmt
-      - unit-test
+      - "Terraform fmt"
+      - "Unit Tests"
       - "Plan Security Group":
           requires: *all_test
-
-      - terraform-global-plan:
-          requires:
-            - terraform-fmt
-            - unit-test
-      - terraform-mini-plan:
-          requires:
-            - terraform-global-plan
+      - "Plan Api Gateway":
+          requires: *all_test
+      - "Plan Lambda":
+          requires: 
+            - "Plan Api Gateway"
+      - "Plan mini Api Gateway Deployment":
+          requires: *all_global_plan
+      - "Plan mini EIP":
+          requires: *all_global_plan
+      - "Plan mini EC2":
+          requires: 
+            - "Plan mini EIP"
+            - "Plan mini Api Gateway Deployment"
+      
