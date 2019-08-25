@@ -5,16 +5,16 @@ aliases:
           command: echo "credentials "app.terraform.io" { token = \"$TF_TOKEN\" }" > ~/.terraformrc
 
   - &plan_api_gateway
-      <<: *create_terraform_credential
       - checkout
+      - *create_terraform_credential
       - run:
           name: Plan api_gateway
           command: >-
             sh -c "cd infrastructures/global/api_gateway &&
             terraform init && terraform plan"
   - &plan_security_group
-      <<: *create_terraform_credential
       - checkout
+      - *create_terraform_credential
       - run:
           name: Terraform security_group plan
           command: >-
