@@ -174,4 +174,7 @@ workflows:
       - "Approve to apply":
           type: approval
           requires: *all_plan
+          branches:
+            only:
+              - master
       
