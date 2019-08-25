@@ -266,16 +266,18 @@ workflows:
             only:
               - master
       - "Apply Security Group":
-          requires: "Approve to apply"
+          requires: 
+            - "Approve to apply"
       - "Apply Api Gateway":
-          requires: "Approve to apply"
+          requires: 
+            - "Approve to apply"
       - "Apply Lambda":
           requires: 
             - "Apply Api Gateway"
       - "Apply mini Api Gateway Deployment":
-          requires: *all_global_plan
+          requires: *all_global_apply
       - "Apply mini EIP":
-          requires: *all_global_plan
+          requires: *all_global_apply
       - "Apply mini EC2":
           requires: 
             - "Apply mini EIP"
