@@ -92,6 +92,7 @@ jobs:
             terraform plan -input=false"
 
   "Plan Security Group":
+    executor: terraform
     steps: *plan_security_group
 
   terraform-mini-plan:
