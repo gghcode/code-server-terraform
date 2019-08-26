@@ -1,6 +1,6 @@
 variable "ami" {
   type        = "string"
-  default     = "ami-0123532c705a9bd92"
+  default     = "ami-04c7cb5e16aadc343"
   description = "EC2 Minimal AMI"
 }
 

@@ -12,7 +12,6 @@ variable "ami" {
 
 variable "instance_type" {
   type        = "string"
-  default     = "t3.micro"
   description = "EC2 Instance Type"
 }
 
