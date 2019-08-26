@@ -34,7 +34,7 @@ resource "null_resource" "preparation" {
     agent   = true
     host    = "${aws_eip_association.this.public_ip}"
     user    = "${var.ssh_username}"
-    timeout = "30s"
+    timeout = "1m"
   }
 
   provisioner "remote-exec" {
