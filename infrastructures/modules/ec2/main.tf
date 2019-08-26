@@ -48,7 +48,8 @@ resource "null_resource" "preparation" {
       "sudo echo TLS_KEY=/etc/letsencrypt/live/${var.domain}/privkey.pem >> /etc/code-server/env",
       "sudo echo PORT=${var.code_server_port} >> /etc/code-server/env",
       "sudo echo PASSWORD=${var.code_server_password} >> /etc/code-server/env",
-      "sudo systemctl start code-server --no-block",
+      "sudo systemctl enable code-server",
+      "sudo systemctl start code-server",
     ]
   }
 }
