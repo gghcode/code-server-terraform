@@ -1,21 +1,3 @@
-variable "name_key_pair" {
-  type        = "string"
-  default     = "sub_code_server"
-  description = "Name of Key Pair"
-}
-
-variable "path_pub_key" {
-  type        = "string"
-  default     = "~/.ssh/code_server_admin.pub"
-  description = "Path of Public Key"
-}
-
-variable "path_pri_key" {
-  type        = "string"
-  default     = "~/.ssh/code_server_admin"
-  description = "Path of Private Key"
-}
-
 variable "ami" {
   type        = "string"
   default     = "ami-0123532c705a9bd92"

@@ -1,16 +1,7 @@
 variable "name_key_pair" {
   type        = "string"
   description = "Name of Key Pair"
-}
-
-variable "path_pub_key" {
-  type        = "string"
-  description = "Path of Public Key"
-}
-
-variable "path_pri_key" {
-  type        = "string"
-  description = "Path of Private Key"
+  default     = "code_server"
 }
 
 variable "ami" {
