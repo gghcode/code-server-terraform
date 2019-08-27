@@ -40,6 +40,11 @@
     path: "{{ code_server_env_dir }}"
     state: directory
 
+- name: Create code-server working dir
+  file: 
+    path: "{{ code_server_work_dir }}"
+    state: directory
+
 - name: Copy code-server env file
   template:
     src: env

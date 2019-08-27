@@ -18,7 +18,5 @@
     - zsh
     - docker
     - node
-    - geerlingguy.packer
-    - andrewrothstein.terraform
     - code-server
     

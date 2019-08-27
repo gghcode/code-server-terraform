@@ -58,59 +58,61 @@ aliases:
             sh -c "cd infrastructures/global/lambda &&
             terraform init && terraform apply -auto-approve"
 
-  - &plan_mini_api_gateway_deployment
+  - &plan_api_gateway_deployment
       - checkout
       - *create_terraform_credential
       - run:
           name: Terraform api_gateway_deployment plan
           command: >-
-            sh -c "cd infrastructures/mini/api_gateway_deployment &&
+            sh -c "cd infrastructures/${TF_WORKSPACE}/api_gateway_deployment &&
             terraform init && terraform plan"
 
-  - &apply_mini_api_gateway_deployment
+  - &apply_api_gateway_deployment
       - checkout
       - *create_terraform_credential
       - run:
           name: Terraform api_gateway_deployment apply
           command: >-
-            sh -c "cd infrastructures/mini/api_gateway_deployment &&
+            sh -c "cd infrastructures/${TF_WORKSPACE}/api_gateway_deployment &&
             terraform init && terraform apply -auto-approve"
 
-  - &plan_mini_eip
+  - &plan_eip
       - checkout
       - *create_terraform_credential
       - run:
           name: Terraform eip plan
           command: >-
-            sh -c "cd infrastructures/mini/eip &&
+            sh -c "cd infrastructures/${TF_WORKSPACE}/eip &&
             terraform init && terraform plan"
 
-  - &apply_mini_eip
+  - &apply_eip
       - checkout
       - *create_terraform_credential
       - run:
           name: Terraform eip apply
           command: >-
-            sh -c "cd infrastructures/mini/eip &&
+            sh -c "cd infrastructures/${TF_WORKSPACE}/eip &&
             terraform init && terraform apply -auto-approve"
 
-  - &plan_mini_ec2
+  - &plan_ec2
       - checkout
       - *create_terraform_credential
       - run:
           name: Terraform ec2 plan
           command: >-
-            sh -c "cd infrastructures/mini/ec2 &&
-            terraform init &&
-            terraform plan -var domain=$CODE_SERVER_DOMAIN -var code_server_password=$CODE_SERVER_PASSWORD"
+            sh -c "cd infrastructures/${TF_WORKSPACE}/ec2 &&
+            terraform init && terraform plan 
+            -var domain=$CODE_SERVER_DOMAIN 
+            -var code_server_password=$CODE_SERVER_PASSWORD 
+            -var ami=$AWS_AMI"
 
-  - &apply_mini_ec2
+  - &apply_ec2
       - checkout
       - *create_terraform_credential
       - run:
           name: Terraform ec2 apply
           command: >-
-            sh -c "cd infrastructures/mini/ec2 &&
+            sh -c "cd infrastructures/${TF_WORKSPACE}/ec2 &&
             terraform init && terraform apply -auto-approve
             -var domain=$CODE_SERVER_DOMAIN 
             -var code_server_password=$CODE_SERVER_PASSWORD
@@ -133,6 +135,9 @@ aliases:
       - "Plan mini Api Gateway Deployment"
       - "Plan mini EIP"
       - "Plan mini EC2"
+      - "Plan prod Api Gateway Deployment"
+      - "Plan prod EIP"
+      - "Plan prod EC2"
   
   - &all_global_apply
       - "Apply Security Group"
@@ -192,21 +197,45 @@ jobs:
 
   "Plan mini Api Gateway Deployment":
     executor: terraform
-    steps: *plan_mini_api_gateway_deployment
+    steps: *plan_api_gateway_deployment
     environment:
       TF_WORKSPACE: mini
 
   "Plan mini EIP":
     executor: terraform
-    steps: *plan_mini_eip
+    steps: *plan_eip
     environment:
       TF_WORKSPACE: mini
 
   "Plan mini EC2":
     executor: terraform
-    steps: *plan_mini_ec2
+    steps: *plan_ec2
     environment:
       TF_WORKSPACE: mini
+      CODE_SERVER_DOMAIN: $MINI_SERVER_DOMAIN
+      CODE_SERVER_PASSWORD: $MINI_CODE_SERVER_PASSWORD
+      AWS_AMI: $MINI_AMI
+
+  "Plan prod Api Gateway Deployment":
+    executor: terraform
+    steps: *plan_api_gateway_deployment
+    environment:
+      TF_WORKSPACE: prod
+
+  "Plan prod EIP":
+    executor: terraform
+    steps: *plan_eip
+    environment:
+      TF_WORKSPACE: prod
+
+  "Plan prod EC2":
+    executor: terraform
+    steps: *plan_ec2
+    environment:
+      TF_WORKSPACE: prod
+      CODE_SERVER_DOMAIN: $PROD_SERVER_DOMAIN
+      CODE_SERVER_PASSWORD: $PROD_CODE_SERVER_PASSWORD
+      AWS_AMI: $PROD_AMI
 
   "Apply Security Group":
     executor: terraform
@@ -222,21 +251,45 @@ jobs:
 
   "Apply mini Api Gateway Deployment":
     executor: terraform
-    steps: *apply_mini_api_gateway_deployment
+    steps: *apply_api_gateway_deployment
     environment:
       TF_WORKSPACE: mini
 
   "Apply mini EIP":
     executor: terraform
-    steps: *apply_mini_eip
+    steps: *apply_eip
     environment:
       TF_WORKSPACE: mini
 
   "Apply mini EC2":
     executor: terraform
-    steps: *apply_mini_ec2
+    steps: *apply_ec2
     environment:
       TF_WORKSPACE: mini
+      CODE_SERVER_DOMAIN: $MINI_SERVER_DOMAIN
+      CODE_SERVER_PASSWORD: $MINI_CODE_SERVER_PASSWORD
+      AWS_AMI: $MINI_AMI
+
+  "Apply prod Api Gateway Deployment":
+    executor: terraform
+    steps: *apply_api_gateway_deployment
+    environment:
+      TF_WORKSPACE: prod
+
+  "Apply prod EIP":
+    executor: terraform
+    steps: *apply_eip
+    environment:
+      TF_WORKSPACE: prod
+
+  "Apply prod EC2":
+    executor: terraform
+    steps: *apply_ec2
+    environment:
+      TF_WORKSPACE: prod
+      CODE_SERVER_DOMAIN: $PROD_SERVER_DOMAIN
+      CODE_SERVER_PASSWORD: $PROD_CODE_SERVER_PASSWORD
+      AWS_AMI: $PROD_AMI
 
 workflows:
   version: 2
@@ -259,6 +312,14 @@ workflows:
           requires: 
             - "Plan mini EIP"
             - "Plan mini Api Gateway Deployment"
+      - "Plan prod Api Gateway Deployment":
+          requires: *all_global_plan
+      - "Plan prod EIP":
+          requires: *all_global_plan
+      - "Plan prod EC2":
+          requires: 
+            - "Plan prod EIP"
+            - "Plan prod Api Gateway Deployment"
       - "Approve to apply":
           type: approval
           requires: *all_plan
@@ -282,3 +343,11 @@ workflows:
           requires: 
             - "Apply mini EIP"
             - "Apply mini Api Gateway Deployment"
+      - "Apply prod Api Gateway Deployment":
+          requires: *all_global_apply
+      - "Apply prod EIP":
+          requires: *all_global_apply
+      - "Apply prod EC2":
+          requires: 
+            - "Apply prod EIP"
+            - "Apply prod Api Gateway Deployment"
