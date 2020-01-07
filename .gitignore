@@ -6,7 +6,8 @@ goorm.manifest
 terraform.tfstate*
 provider.tf
 
-# Temp file
+# Temp
+workspace-generator/
 ec2_scheduler.zip
 
 ### Python ###
