@@ -1,0 +1,6 @@
+[user]
+    email = {{ user_email }}
+    name = {{ user_name }}
+
+[core]
+    editor = {{ git_editor }}

@@ -10,3 +10,9 @@
     name: git
     state: latest
     update_cache: yes
+
+- name: Copy user template of Git
+  become: true
+  template:
+    src: .gitconfig
+    dest: /etc/gitconfig
