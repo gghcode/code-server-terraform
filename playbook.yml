@@ -1,0 +1,7 @@
+- name: gghcode env init
+  hosts: local
+  connection: local
+  gather_facts: no
+  become: true
+  roles:
+    - git

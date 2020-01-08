@@ -45,12 +45,16 @@ checkout_repo() {
   git clone $repo_url $WORKSPACE_NAME
 }
 
+execute_ansible() {
+  sh -c "cd $WORKSPACE_NAME && ansible-playbook -i hosts playbook.yml"
+}
+
 setup() {
   ensure_installed_git
   ensure_installed_ansible
   checkout_repo
 
-  echo "HI"
+  execute_ansible
 }
 
 setup
