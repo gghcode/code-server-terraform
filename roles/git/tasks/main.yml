@@ -1,10 +1,10 @@
-- name: Add Git Repository
+- name: Add Git APT Repository
   become: true
   apt_repository:
     repo: ppa:git-core/ppa
     state: present
 
-- name: Install git
+- name: Install Git
   become: true
   apt:
     name: git
