@@ -5,6 +5,22 @@
   vars:
     user_name: "Gyuhwan Kim"
     user_email: "gyuhwan.a.kim@gmail.com"
+    oh_my_zsh_plugins:
+      - git
+      - zsh-autosuggestions
+      - zsh-syntax-highlighting
   roles:
     - git
     - docker
+    - role: oh-my-zsh
+      users:
+        - username: "{{ ansible_user_id }}"
+  post_tasks:
+    - name: Clone zsh-autosuggestions plugin
+      git:
+        repo: https://github.com/zsh-users/zsh-autosuggestions.git
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    - name: Clone zsh-syntax-highlighting plugin
+      git:
+        repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting

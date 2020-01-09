@@ -1,0 +1,16 @@
+---
+- name: Clone zsh-autosuggestions plugin
+  with_items: "{{ users | map(attribute='username') | list }}"
+  loop_control:
+    loop_var: username
+  git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions.git
+    dest: ~{{ username }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+- name: Clone zsh-syntax-highlighting plugin
+  with_items: "{{ users | map(attribute='username') | list }}"
+  loop_control:
+    loop_var: username
+  git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: ~{{ username }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
