@@ -1,3 +1,4 @@
+---
 - name: Add Git APT Repository
   become: true
   apt_repository:
