@@ -3,3 +3,6 @@
 
 - src: https://github.com/gantsign/ansible-role-oh-my-zsh
   name: oh-my-zsh
+
+- src: https://github.com/geerlingguy/ansible-role-nodejs
+  name: nodejs
