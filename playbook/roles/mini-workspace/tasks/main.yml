@@ -1,5 +1,0 @@
-- name: Clone My Code Server Repository
-  become: true
-  git:
-    repo: https://github.com/gghcode/code-server-terraform.git
-    dest: ~/workspace/code-server-terraform

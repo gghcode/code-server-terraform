@@ -1,7 +1,0 @@
----
-code_server_ver: 2.preview.9-vsc1.37.0 # 1.1156-vsc1.33.1
-code_server_data_dir: ~/.config/Code
-code_server_work_dir: ~/workspace
-code_server_env_dir: /etc/code-server
-code_server_user: root
-code_server_host: 0.0.0.0
