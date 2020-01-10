@@ -1,0 +1,9 @@
+---
+- name: Clone pure theme
+  with_items: "{{ users | map(attribute='username') | list }}"
+  loop_control:
+    loop_var: username
+  git:
+    repo: https://github.com/sindresorhus/pure.git
+    dest: ~{{ username }}/.oh-my-zsh/pure
+  

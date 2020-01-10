@@ -5,7 +5,7 @@
   vars:
     user_name: "Gyuhwan Kim"
     user_email: "gyuhwan.a.kim@gmail.com"
-    oh_my_zsh_theme: agnoster
+    oh_my_zsh_theme: ""
     oh_my_zsh_plugins:
       - git
       - zsh-autosuggestions
