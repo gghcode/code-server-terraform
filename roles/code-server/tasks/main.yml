@@ -1,0 +1,52 @@
+- name: Download code-server
+  unarchive:
+    remote_src: yes
+    src: "{{ code_server_tar_url }}"
+    dest: "{{ bin_dir }}"
+    extra_opts:
+      - --strip-components=1
+      - --wildcards
+      - "*/code-server"
+  notify: Restart code-server
+
+- name: Copy code-server systemd unit file
+  become: yes
+  template:
+    src: code-server.service.j2
+    dest: "{{ systemd_unit_files_dir }}"
+  notify: Restart code-server
+
+- name: Create code-server data dir
+  file:
+    path: "{{ code_server_data_dir }}"
+    state: directory
+
+- name: Create code-server env dir
+  file: 
+    path: "{{ code_server_env_dir }}"
+    state: directory
+
+- name: Create code-server working dir
+  file: 
+    path: "{{ code_server_work_dir }}"
+    state: directory
+
+- name: Copy code-server env file
+  template:
+    src: env.j2
+    dest: "{{ code_server_env_dir }}/env"
+    mode: 0606
+  notify: Restart code-server
+
+# - name: Add CertBot Repository
+#   become: true
+#   apt_repository:
+#     repo: ppa:certbot/certbot
+#     state: present
+
+# - name: Install CertBot
+#   become: true
+#   apt:
+#     name: certbot
+#     state: present
+#     update_cache: yes

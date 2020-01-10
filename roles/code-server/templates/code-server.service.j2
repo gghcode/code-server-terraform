@@ -1,0 +1,15 @@
+[Unit]
+Description=Run VS Code on a remote server.
+Documentation=https://github.com/cdr/code-server
+After=network.target
+
+[Service]
+User={{ code_server_user }}
+{% if code_server_password is defined %}
+EnvironmentFile={{ code_server_env_dir }}/env
+{% endif %}
+ExecStart={{ bin_dir }}/code-server --auth password --cert $TLS_CERT --cert-key $TLS_KEY --host {{ code_server_host }} --port $PORT --user-data-dir {{ code_server_data_dir_abs }} {{ code_server_work_dir | expanduser }}
+WorkingDirectory={{ code_server_work_dir }}
+
+[Install]
+WantedBy=multi-user.target
