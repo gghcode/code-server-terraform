@@ -37,11 +37,10 @@ ensure_installed_ansible() {
 
 checkout_repo() {
   local repo_url="https://github.com/gghcode/code-server-terraform"
-
   if [ -d $WORKSPACE_NAME ]; then
-    rm -r $WORKSPACE_NAME &> /dev/null
+    sudo rm -r $WORKSPACE_NAME &> /dev/null
   fi
-  
+
   git clone $repo_url $WORKSPACE_NAME
 }
 
