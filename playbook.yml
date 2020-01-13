@@ -19,7 +19,7 @@
       when: install_docker == true
     - role: oh-my-zsh
       users:
-        - username: "{{ lookup('env','SUDO_USER') | default('ansible_user', true) }}"
+        - username: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
     - role: nodejs
       become: true
     - code-server
