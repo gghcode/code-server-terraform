@@ -32,10 +32,9 @@ checkout_repo() {
 }
 
 setup_environment() {
-    local cur_path=$( cd "$(dirname "$0")" ; pwd )
-    local setup_script_path="${cur_path}/setup.sh"
+    local setup_script_path="scripts/setup.sh"
 
-    $setup_script_path
+    sh -c "cd $WORKSPACE_NAME && $setup_script_path"
 }
 
 pull() {
