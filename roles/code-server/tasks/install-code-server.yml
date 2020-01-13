@@ -10,7 +10,6 @@
       - "*/code-server"
 
 - name: Copy code-server systemd unit file
-  become: yes
   template:
     src: code-server.service.j2
     dest: "{{ systemd_unit_files_dir }}/code-server.service"

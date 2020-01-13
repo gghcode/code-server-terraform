@@ -1,4 +1,5 @@
 - name: Install code-server
+  become: yes
   import_tasks: install-code-server.yml
 
 - name: Setup certbot

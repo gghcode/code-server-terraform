@@ -15,12 +15,12 @@
   roles:
     - git
     - role: docker
-      become: true
+      become: yes
       when: install_docker == true
     - role: oh-my-zsh
       users:
         - username: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
     - role: nodejs
-      become: true
+      become: yes
     - code-server
 
