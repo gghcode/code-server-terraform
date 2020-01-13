@@ -6,6 +6,7 @@
   when: ansible_os_family == 'Debian'
 
 - name: install oh-my-zsh plugins
+  become: true
   import_tasks: plugins.yml
 
 - name: install oh-my-zsh theme
