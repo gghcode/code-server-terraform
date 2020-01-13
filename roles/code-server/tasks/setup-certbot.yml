@@ -1,0 +1,13 @@
+---
+- name: Add CertBot Repository
+  become: true
+  apt_repository:
+    repo: ppa:certbot/certbot
+    state: present
+
+- name: Install CertBot
+  become: true
+  apt:
+    name: certbot
+    state: present
+    update_cache: yes

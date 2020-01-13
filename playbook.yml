@@ -3,6 +3,8 @@
   connection: local
   gather_facts: yes
   vars:
+    install_docker: true
+    skip_code_server: false
     user_name: "Gyuhwan Kim"
     user_email: "gyuhwan.a.kim@gmail.com"
     oh_my_zsh_theme: ""
@@ -12,7 +14,8 @@
       - zsh-syntax-highlighting
   roles:
     - git
-    - docker
+    - role: docker
+      when: install_docker == true
     - role: oh-my-zsh
       users:
         - username: "{{ lookup('env','SUDO_USER') | default('root', true) }}"
