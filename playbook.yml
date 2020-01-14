@@ -7,6 +7,7 @@
     skip_code_server: false
     user_name: "Gyuhwan Kim"
     user_email: "gyuhwan.a.kim@gmail.com"
+    main_user: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
     oh_my_zsh_theme: ""
     oh_my_zsh_plugins:
       - git

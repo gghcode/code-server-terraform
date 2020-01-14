@@ -15,5 +15,10 @@
 - name: Copy user template of Git
   become: true
   template:
-    src: .gitconfig
+    src: .gitconfig.j2
     dest: /etc/gitconfig
+
+- name: Copy vimrc template
+  template:
+    src: .vimrc.j2
+    dest: ~{{ main_user }}/.vimrc
