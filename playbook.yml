@@ -3,7 +3,7 @@
   connection: local
   gather_facts: yes
   vars:
-    install_docker: true
+    skip_docker: false
     skip_code_server: false
     user_name: "Gyuhwan Kim"
     user_email: "gyuhwan.a.kim@gmail.com"
@@ -17,11 +17,12 @@
     - git
     - role: docker
       become: yes
-      when: install_docker == true
+      when: skip_docker == false
     - role: oh-my-zsh
       users:
         - username: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
     - role: nodejs
       become: yes
-    - code-server
+    - role: code-server
+      when: skip_code_server == false
 
