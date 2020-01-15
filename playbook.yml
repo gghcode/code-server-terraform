@@ -22,6 +22,7 @@
     - role: oh-my-zsh
       users:
         - username: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
+    - python
     - role: nodejs
       become: yes
     - role: gantsign.golang
