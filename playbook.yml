@@ -25,6 +25,8 @@
     - role: nodejs
       become: yes
     - role: code-server
+      become: yes
+      code_server_ssl: true
       code_server_tls_cert: "/etc/letsencrypt/live/{{ main_domain }}/cert.pem"
       code_server_tls_key: "/etc/letsencrypt/live/{{ main_domain }}/privkey.pem"
       certbot_create_if_missing: yes
