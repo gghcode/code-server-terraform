@@ -9,3 +9,5 @@
 
 - src: https://github.com/geerlingguy/ansible-role-certbot
   name: certbot
+
+- src: gantsign.golang

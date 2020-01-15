@@ -24,6 +24,10 @@
         - username: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
     - role: nodejs
       become: yes
+    - role: gantsign.golang
+      become: yes
+      golang_install_dir: "/usr/local/go"
+      golang_gopath: "$HOME/go"
     - role: code-server
       become: yes
       code_server_ssl: true
