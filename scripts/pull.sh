@@ -33,8 +33,8 @@ checkout_repo() {
 
 setup_environment() {
     local setup_script_path="scripts/setup.sh"
-
-    sh -c "cd $WORKSPACE_NAME && $setup_script_path"
+  
+    sh -c "cd $WORKSPACE_NAME && $setup_script_path $@"
 }
 
 pull() {

@@ -1,9 +1,9 @@
+- name: Setup certbot
+  include_role:
+    name: certbot
+  when: main_domain is defined
+
 - name: Install code-server
   become: yes
   import_tasks: install-code-server.yml
 
-- name: Setup certbot
-  include_role:
-    name: certbot
-  # import_tasks: setup-certbot.yml
-  # when: domain is defined

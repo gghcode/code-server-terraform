@@ -8,6 +8,7 @@
     user_name: "Gyuhwan Kim"
     user_email: "gyuhwan.a.kim@gmail.com"
     main_user: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
+    main_domain: "ghcode.dev"
     oh_my_zsh_theme: ""
     oh_my_zsh_plugins:
       - git
@@ -24,10 +25,13 @@
     - role: nodejs
       become: yes
     - role: code-server
-      certbot_create_command: "certbot certonly --standalone -d {{ cert_item.domains | join(',') }} --noninteractive --agree-tos --email {{ cert_item.email }}"
+      code_server_tls_cert: "/etc/letsencrypt/live/{{ main_domain }}/cert.pem"
+      code_server_tls_key: "/etc/letsencrypt/live/{{ main_domain }}/privkey.pem"
+      certbot_create_if_missing: yes
+      certbot_create_standalone_stop_services: []
+      certbot_admin_email: "{{ user_email }}"
       certbot_certs: 
-      - email: "{{ user_email }}"
-        domains:
-          - test.ghcode.dev
+      - domains:
+        - "{{ main_domain }}"
       when: skip_code_server == false
 
