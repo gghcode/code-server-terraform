@@ -6,3 +6,6 @@
 
 - src: https://github.com/geerlingguy/ansible-role-nodejs
   name: nodejs
+
+- src: https://github.com/geerlingguy/ansible-role-certbot
+  name: certbot

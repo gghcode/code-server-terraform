@@ -24,5 +24,10 @@
     - role: nodejs
       become: yes
     - role: code-server
+      certbot_create_command: "certbot certonly --standalone -d {{ cert_item.domains | join(',') }} --noninteractive --agree-tos --email {{ cert_item.email }}"
+      certbot_certs: 
+      - email: "{{ user_email }}"
+        domains:
+          - test.ghcode.dev
       when: skip_code_server == false
 

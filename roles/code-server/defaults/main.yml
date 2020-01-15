@@ -5,5 +5,5 @@ code_server_data_dir: "{{ lookup('env', 'HOME') }}/.config/Code"
 code_server_work_dir: "{{ lookup('env', 'HOME') }}"
 code_server_user: "{{ lookup('env','SUDO_USER') | default('root', true) }}"
 code_server_host: 0.0.0.0
-code_server_port: 8080
+code_server_port: "{{ 443 if code_server_ssl == true else 8080 }}"
 code_server_ssl: false
