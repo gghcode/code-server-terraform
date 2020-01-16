@@ -17,7 +17,7 @@
     - git
     - role: docker
       become: yes
-      when: skip_docker == false
+      when: skip_docker|bool != true
     - role: oh-my-zsh
       users:
         - username: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
@@ -39,5 +39,5 @@
       certbot_certs: 
       - domains:
         - "{{ main_domain }}"
-      when: skip_code_server == false
+      when: skip_code_server|bool != true
 
