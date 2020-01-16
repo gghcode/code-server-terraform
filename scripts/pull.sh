@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-set -e
-
 PASS_ARGS=$@
 
 DEFAULT_WORKSPACE_NAME="workspace-generator"
