@@ -23,7 +23,7 @@ ensure_installed_git() {
 }
 
 checkout_repo() {
-  local repo_url="https://github.com/gghcode/code-server-terraform"
+  local repo_url="https://github.com/gghcode/development-environment"
   if [ -d $WORKSPACE_NAME ]; then
     sudo rm -r $WORKSPACE_NAME &> /dev/null
   fi
