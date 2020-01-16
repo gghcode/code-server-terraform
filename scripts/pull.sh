@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+PASS_ARGS=$@
+
 DEFAULT_WORKSPACE_NAME="workspace-generator"
 if [ -z $WORKSPACE_NAME ]; then
   WORKSPACE_NAME=$DEFAULT_WORKSPACE_NAME
@@ -33,8 +35,8 @@ checkout_repo() {
 
 setup_environment() {
     local setup_script_path="scripts/setup.sh"
-  
-    sh -c "cd $WORKSPACE_NAME && $setup_script_path $@"
+    echo $@
+    sh -c "cd $WORKSPACE_NAME && $setup_script_path $PASS_ARGS"
 }
 
 pull() {
