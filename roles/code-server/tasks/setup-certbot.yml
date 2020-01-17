@@ -1,13 +1,10 @@
 ---
-- name: Add CertBot Repository
-  become: true
-  apt_repository:
-    repo: ppa:certbot/certbot
-    state: present
+- name: Grant /etc/letsencrypt/live
+  file:
+    path: /etc/letsencrypt/live
+    mode: '755'
 
-- name: Install CertBot
-  become: true
-  apt:
-    name: certbot
-    state: present
-    update_cache: yes
+- name: Grant /etc/letsencrypt/archive
+  file:
+    path: /etc/letsencrypt/archive
+    mode: '755'

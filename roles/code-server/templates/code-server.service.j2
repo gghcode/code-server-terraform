@@ -4,7 +4,7 @@ Documentation=https://github.com/cdr/code-server
 After=network.target
 
 [Service]
-User={{ code_server_user }}
+User={{ main_user }}
 EnvironmentFile={{ code_server_env_dir }}/env
 ExecStart={{ bin_dir }}/code-server --auth password {% if code_server_ssl == true %} --cert $TLS_CERT --cert-key $TLS_KEY {% endif %} --host {{ code_server_host }} --port $PORT --user-data-dir {{ code_server_data_dir_abs }} {{ code_server_work_dir | expanduser }}
 WorkingDirectory={{ code_server_work_dir }}

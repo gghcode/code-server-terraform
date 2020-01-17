@@ -29,7 +29,6 @@
       golang_install_dir: "/usr/local/go"
       golang_gopath: "$HOME/go"
     - role: code-server
-      become: yes
       code_server_ssl: "{{True if main_domain else False}}"
       code_server_tls_cert: "/etc/letsencrypt/live/{{ main_domain }}/cert.pem"
       code_server_tls_key: "/etc/letsencrypt/live/{{ main_domain }}/privkey.pem"

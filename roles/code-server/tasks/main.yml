@@ -3,6 +3,10 @@
     name: certbot
   when: main_domain is defined
 
+- name: Grant certificate permission
+  become: yes
+  import_tasks: setup-certbot.yml
+
 - name: Install code-server
   become: yes
   import_tasks: install-code-server.yml
