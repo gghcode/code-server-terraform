@@ -19,6 +19,11 @@
     path: "{{ code_server_data_dir }}"
     state: directory
 
+- name: Grant code-server data dir
+  file:
+    path: "{{ code_server_data_dir }}"
+    mode: '755'
+
 - name: Create code-server env dir
   file: 
     path: "{{ code_server_env_dir }}"
