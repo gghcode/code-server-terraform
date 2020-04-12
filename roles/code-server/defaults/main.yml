@@ -1,6 +1,5 @@
 ---
-code_server_ver: 2.1698
-code_server_full_ver: "{{ code_server_ver }}-vsc1.41.1"
+code_server_ver: 3.1.0
 code_server_env_dir: /etc/code-server
 code_server_data_dir: "{{ lookup('env', 'HOME') }}/.config/Code"
 code_server_work_dir: "{{ lookup('env', 'HOME') }}"
