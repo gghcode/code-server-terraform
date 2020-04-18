@@ -1,5 +1,5 @@
 ---
-bin_dir: /usr/local/bin
+bin_dir: /usr/local/bin/code-server
 systemd_unit_files_dir: /etc/systemd/system
 code_server_url_prefix: https://github.com/cdr/code-server/releases/download
 code_server_arch: x86_64
