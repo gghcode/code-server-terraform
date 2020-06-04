@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 PASS_ARGS=$@
 
-DEFAULT_WORKSPACE_NAME="workspace-generator"
+DEFAULT_WORKSPACE_NAME="/tmp/workspace-generator"
 if [ -z $WORKSPACE_NAME ]; then
   WORKSPACE_NAME=$DEFAULT_WORKSPACE_NAME
 fi
