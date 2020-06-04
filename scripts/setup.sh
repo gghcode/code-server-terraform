@@ -1,44 +1,42 @@
 #!/usr/bin/env bash
 set -e
 
-DEFAULT_FLAG_SKIP_INSTALL_DOCKER=false
-if [ -z $FLAG_SKIP_INSTALL_DOCKER ]; then
-  FLAG_SKIP_INSTALL_DOCKER=$DEFAULT_FLAG_SKIP_INSTALL_DOCKER
-fi
+help() {
+  echo "============= development-environment-setup-script ============="
+  echo "Options"
+  echo "      --skip-install-docker:     Skip to install docker"
+  echo "      --code-server-version:     Set code-server version"
+  echo "      --code-server-password:    Set code-server Password"
+  echo "      --code-server-tls-enable:  Enable code-server TLS"
+  echo "      --code-server-tls-domain:  Set code-server TLS domain"
+  echo
+  echo "================================================================"
+}
 
-DEFAULT_FLAG_SKIP_INSTALL_CODE_SERVER=false
-if [ -z $FLAG_SKIP_INSTALL_CODE_SERVER ]; then
-  FLAG_SKIP_INSTALL_CODE_SERVER=$DEFAULT_FLAG_SKIP_INSTALL_CODE_SERVER
-fi
-
-DEFAULT_CODE_SERVER_PASSWORD=""
-if [ -z $CODE_SERVER_PASSWORD ]; then
-  CODE_SERVER_PASSWORD=$DEFAULT_CODE_SERVER_PASSWORD
-fi
-
-DEFAULT_CODE_SERVER_DOMAIN=""
-if [ -z $CODE_SERVER_DOMAIN ]; then
-  CODE_SERVER_DOMAIN=$DEFAULT_CODE_SERVER_DOMAIN
-fi
-
-# --skip-install-docker       Skip to install docker
-# --skip-install-code-server  Skip to install code-server
-# --code-server-password      Set code-server Password
-# --code-server-domain        Set code-server domain
 while [ $# -gt 0 ]; do
 	case "$1" in
+    --help)
+      help
+      exit 0
+      shift
+      ;;
     --skip-install-docker) 
       FLAG_SKIP_INSTALL_DOCKER=true          
       ;;
-    --skip-install-code-server) 
-      FLAG_SKIP_INSTALL_CODE_SERVER=true            
+    --code-server-version)
+      CODE_SERVER_VERSION=$2
+      shift
       ;;
     --code-server-password) 
       CODE_SERVER_PASSWORD=$2
       shift
       ;;
-    --code-server-domain)
-      CODE_SERVER_DOMAIN=$2
+    --code-server-tls-enable)
+      CODE_SERVER_TLS_ENABLE=true
+      shift
+      ;;
+    --code-server-tls-domain)
+      CODE_SERVER_TLS_DOMAIN=$2
       shift
       ;;
 		--*)
@@ -48,6 +46,27 @@ while [ $# -gt 0 ]; do
 	esac
 	shift $(( $# > 0 ? 1 : 0 ))
 done
+
+DEFAULT_FLAG_SKIP_INSTALL_DOCKER=false
+if [ -z $FLAG_SKIP_INSTALL_DOCKER ]; then
+  FLAG_SKIP_INSTALL_DOCKER=$DEFAULT_FLAG_SKIP_INSTALL_DOCKER
+fi
+
+if [ -z $CODE_SERVER_VERSION ]; then
+  read -p "code-server-version: " CODE_SERVER_VERSION
+fi
+
+if [ -z $CODE_SERVER_PASSWORD ]; then
+  read -p "code-server-password: " -s CODE_SERVER_PASSWORD; echo
+fi
+
+if [ -z $CODE_SERVER_TLS_ENABLE ]; then
+  read -p "code-server-tls-enable(true): " CODE_SERVER_TLS_ENABLE
+fi
+
+if [ $CODE_SERVER_TLS_ENABLE = 'true' ] && [ -z $CODE_SERVER_TLS_DOMAIN ]; then
+  read -p "code-server-tls-domain: " CODE_SERVER_TLS_DOMAIN
+fi
 
 command_exists() {
 	command -v "$@" > /dev/null 2>&1
@@ -72,9 +91,10 @@ execute_ansible() {
 
   sh -c "cd $workspace_path && ansible-playbook -i hosts playbook.yml \
     --extra-vars skip_docker=$FLAG_SKIP_INSTALL_DOCKER \
-    --extra-vars skip_code_server=$FLAG_SKIP_INSTALL_CODE_SERVER \
+    --extra-vars code_server_version=$CODE_SERVER_VERSION \
     --extra-vars code_server_password=$CODE_SERVER_PASSWORD \
-    --extra-vars main_domain=$CODE_SERVER_DOMAIN"
+    --extra-vars code_server_tls_enable=$CODE_SERVER_TLS_ENABLE \
+    --extra-vars code_server_tls_domain=$CODE_SERVER_TLS_DOMAIN"
 }
 
 setup() {
