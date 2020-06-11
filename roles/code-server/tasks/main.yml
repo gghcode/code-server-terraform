@@ -1,15 +1,25 @@
+- name: Assert arguments
+  assert:
+    that:
+      - code_server_tls_enable is defined
+
+- name: Assert
+  when: code_server_tls_enable|bool == true
+  assert:
+    that:
+      - code_server_tls_domain is defined
+      - code_server_tls_domain != ''
+
 - name: Setup certbot
   include_role:
     name: certbot
   when:
-    - main_domain is defined
-    - main_domain != ''
+    - code_server_tls_enable|bool != true
 
 - name: Grant certificate permission
   import_tasks: setup-certbot.yml
   when:
-    - main_domain is defined
-    - main_domain != ''
+    - code_server_tls_enable|bool != true
 
 - name: Install code-server
   import_tasks: install-code-server.yml

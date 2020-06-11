@@ -91,7 +91,7 @@ execute_ansible() {
 
   sh -c "cd $workspace_path && ansible-playbook -i hosts playbook.yml \
     --extra-vars skip_docker=$FLAG_SKIP_INSTALL_DOCKER \
-    --extra-vars code_server_version=$CODE_SERVER_VERSION \
+    --extra-vars code_server_ver=$CODE_SERVER_VERSION \
     --extra-vars code_server_password=$CODE_SERVER_PASSWORD \
     --extra-vars code_server_tls_enable=$CODE_SERVER_TLS_ENABLE \
     --extra-vars code_server_tls_domain=$CODE_SERVER_TLS_DOMAIN"
