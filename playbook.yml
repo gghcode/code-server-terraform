@@ -14,18 +14,22 @@
       - zsh-autosuggestions
       - zsh-syntax-highlighting
   roles:
-    - role: code-server
-      become: yes
-      code_server_ver: "{{ lookup('env', 'CODE_SERVER_VERSION')"
-      code_server_ssl: "{{True if main_domain else False}}"
-      code_server_tls_cert: "/etc/letsencrypt/live/{{ main_domain }}/cert.pem"
-      code_server_tls_key: "/etc/letsencrypt/live/{{ main_domain }}/privkey.pem"
+    - role: certbot
+      when: code_server_tls_enable|bool == true
       certbot_create_if_missing: yes
       certbot_create_standalone_stop_services: []
       certbot_admin_email: "{{ user_email }}"
       certbot_certs:
         - domains:
-            - "{{ main_domain }}"
+            - "{{ code_server_tls_domain }}"
+
+    - role: code-server
+      become: yes
+      code_server_ver: "{{ lookup('env', 'CODE_SERVER_VERSION')"
+      code_server_ssl: "{{True if main_domain else False}}"
+      code_server_tls_cert: "/etc/letsencrypt/live/{{ code_server_tls_domain }}/cert.pem"
+      code_server_tls_key: "/etc/letsencrypt/live/{{ code_server_tls_domain }}/privkey.pem"
+
     - git
     - role: docker
       become: yes

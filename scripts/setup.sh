@@ -3,6 +3,7 @@ set -e
 
 help() {
   echo "============= development-environment-setup-script ============="
+  echo
   echo "Options"
   echo "      --skip-install-docker:     Skip to install docker"
   echo "      --code-server-version:     Set code-server version"
