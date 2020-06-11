@@ -25,8 +25,6 @@
 
     - role: code-server
       become: yes
-      code_server_ver: "{{ lookup('env', 'CODE_SERVER_VERSION')"
-      code_server_ssl: "{{True if main_domain else False}}"
       code_server_tls_cert: "/etc/letsencrypt/live/{{ code_server_tls_domain }}/cert.pem"
       code_server_tls_key: "/etc/letsencrypt/live/{{ code_server_tls_domain }}/privkey.pem"
 

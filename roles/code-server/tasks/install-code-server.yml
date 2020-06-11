@@ -1,7 +1,7 @@
 ---
 - name: Create a code-server directory if it does not exist
   file:
-    path: "{{ bin_dir }}"
+    path: "{{ lib_dir }}"
     state: directory
     mode: 0755
 
@@ -9,11 +9,19 @@
   unarchive:
     remote_src: yes
     src: "{{ code_server_tar_url }}"
-    dest: "{{ bin_dir }}"
+    dest: "{{ lib_dir }}"
     extra_opts:
       - --strip-components=1
       - --wildcards
       - "*/"
+
+- name: Create code-server binary symbolic link
+  file:
+    src: "{{ lib_dir }}/bin/code-server"
+    dest: "{{ bin_dir }}/code-server"
+    owner: "{{ main_user }}"
+    group: "{{ main_user }}"
+    state: link
 
 - name: Copy code-server systemd unit file
   template:
