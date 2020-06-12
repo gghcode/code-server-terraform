@@ -1,9 +1,10 @@
 - name: Assert arguments
   assert:
     that:
+      - code_server_ver is defined
       - code_server_tls_enable is defined
 
-- name: Assert
+- name: Assert TLS arguments
   when: code_server_tls_enable|bool == true
   assert:
     that:

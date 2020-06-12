@@ -5,6 +5,13 @@
     repo: ppa:git-core/ppa
     state: present
 
+- name: Install latest Vim
+  become: true
+  apt:
+    name: vim
+    state: latest
+    update_cache: yes
+
 - name: Install Git
   become: true
   apt:

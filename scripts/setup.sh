@@ -50,7 +50,10 @@ done
 
 DEFAULT_FLAG_SKIP_INSTALL_DOCKER=false
 if [ -z $FLAG_SKIP_INSTALL_DOCKER ]; then
-  FLAG_SKIP_INSTALL_DOCKER=$DEFAULT_FLAG_SKIP_INSTALL_DOCKER
+  read -p "skip-install-docker(true|default: false): " $FLAG_SKIP_INSTALL_DOCKER
+  if [ ! $FLAG_SKIP_INSTALL_DOCKER = 'true' ]; then
+  	FLAG_SKIP_INSTALL_DOCKER=false
+  fi
 fi
 
 if [ -z $CODE_SERVER_VERSION ]; then

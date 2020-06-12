@@ -3,42 +3,26 @@
   connection: local
   gather_facts: yes
   vars:
-    skip_docker: false
-    skip_code_server: false
-    user_name: "Gyuhwan Kim"
-    user_email: "gyuhwan.a.kim@gmail.com"
     main_user: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
-    oh_my_zsh_theme: ""
-    oh_my_zsh_plugins:
-      - git
-      - zsh-autosuggestions
-      - zsh-syntax-highlighting
   roles:
-    - role: certbot
-      when: code_server_tls_enable|bool == true
-      certbot_create_if_missing: yes
-      certbot_create_standalone_stop_services: []
-      certbot_admin_email: "{{ user_email }}"
-      certbot_certs:
-        - domains:
-            - "{{ code_server_tls_domain }}"
-
     - role: code-server
       become: yes
       code_server_tls_cert: "/etc/letsencrypt/live/{{ code_server_tls_domain }}/cert.pem"
       code_server_tls_key: "/etc/letsencrypt/live/{{ code_server_tls_domain }}/privkey.pem"
 
-    - git
-    - role: docker
-      become: yes
-      when: skip_docker|bool != true
+    - role: git
+      git_author_name: "Gyuhwan Kim"
+      git_author_email: "gyuhwan.a.kim@gmail.com"
+
     - role: oh-my-zsh
       users:
-        - username: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
-    - python
-    - role: nodejs
+        - username: "{{ main_user }}"
+          oh_my_zsh_theme: ""
+          oh_my_zsh_plugins:
+            - git
+            - zsh-autosuggestions
+            - zsh-syntax-highlighting
+
+    - role: docker
+      when: skip_docker|bool != true
       become: yes
-    - role: gantsign.golang
-      become: yes
-      golang_install_dir: "/usr/local/go"
-      golang_gopath: "$HOME/go"
