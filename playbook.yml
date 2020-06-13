@@ -17,11 +17,11 @@
     - role: oh-my-zsh
       users:
         - username: "{{ main_user }}"
-          oh_my_zsh_theme: ""
-          oh_my_zsh_plugins:
-            - git
-            - zsh-autosuggestions
-            - zsh-syntax-highlighting
+      oh_my_zsh_theme: ""
+      oh_my_zsh_plugins:
+        - git
+        - zsh-autosuggestions
+        - zsh-syntax-highlighting
 
     - role: docker
       when: skip_docker|bool != true
