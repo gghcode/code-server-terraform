@@ -23,6 +23,15 @@
         - zsh-autosuggestions
         - zsh-syntax-highlighting
 
+    - role: asdf
+      asdf_init_shell: true
+      asdf_plugins:
+        - name: "python"
+        - name: "nodejs"
+        - name: "golang"
+        - name: "rclone"
+        - name: "terraform"
+
     - role: docker
       when: skip_docker|bool != true
       become: yes
