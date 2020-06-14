@@ -8,7 +8,6 @@ help() {
   echo "      --skip-install-docker:     Skip to install docker"
   echo "      --code-server-version:     Set code-server version"
   echo "      --code-server-password:    Set code-server Password"
-  echo "      --code-server-tls-enable:  Enable code-server TLS"
   echo "      --code-server-tls-domain:  Set code-server TLS domain"
   echo
   echo "================================================================"
@@ -32,11 +31,8 @@ while [ $# -gt 0 ]; do
       CODE_SERVER_PASSWORD=$2
       shift
       ;;
-    --code-server-tls-enable)
-      CODE_SERVER_TLS_ENABLE=true
-      shift
-      ;;
     --code-server-tls-domain)
+      CODE_SERVER_TLS_ENABLE=true
       CODE_SERVER_TLS_DOMAIN=$2
       shift
       ;;
@@ -50,7 +46,7 @@ done
 
 DEFAULT_FLAG_SKIP_INSTALL_DOCKER=false
 if [ -z $FLAG_SKIP_INSTALL_DOCKER ]; then
-  read -p "skip-install-docker(true|default: false): " $FLAG_SKIP_INSTALL_DOCKER
+  read -p "skip-install-docker(true|default: false): " FLAG_SKIP_INSTALL_DOCKER
   if [ ! $FLAG_SKIP_INSTALL_DOCKER = 'true' ]; then
   	FLAG_SKIP_INSTALL_DOCKER=false
   fi
@@ -65,7 +61,10 @@ if [ -z $CODE_SERVER_PASSWORD ]; then
 fi
 
 if [ -z $CODE_SERVER_TLS_ENABLE ]; then
-  read -p "code-server-tls-enable(true): " CODE_SERVER_TLS_ENABLE
+  read -p "code-server-tls-enable(true|default: false): " CODE_SERVER_TLS_ENABLE
+  if [ ! $CODE_SERVER_TLS_ENABLE  = 'true' ]; then
+    CODE_SERVER_TLS_ENABLE=false
+  fi
 fi
 
 if [ $CODE_SERVER_TLS_ENABLE = 'true' ] && [ -z $CODE_SERVER_TLS_DOMAIN ]; then
@@ -84,8 +83,6 @@ ensure_installed_ansible() {
   echo "ansible isn't installed!"
 
   sudo apt update
-  sudo apt install -y software-properties-common
-  sudo apt-add-repository --yes --update ppa:ansible/ansible
   sudo apt install -y ansible
 }
 
@@ -107,4 +104,3 @@ setup() {
 }
 
 setup
-

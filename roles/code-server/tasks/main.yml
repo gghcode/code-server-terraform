@@ -11,9 +11,6 @@
       - code_server_tls_domain is defined
       - code_server_tls_domain != ''
 
-- name: Grant certificate permission
-  when: code_server_tls_enable|bool == true
-  import_tasks: setup-certbot.yml
-
 - name: Install code-server
-  import_tasks: install-code-server.yml
+  become: yes
+  import_tasks: install.yml
