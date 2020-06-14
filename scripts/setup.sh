@@ -5,10 +5,11 @@ help() {
   echo "============= development-environment-setup-script ============="
   echo
   echo "Options"
-  echo "      --skip-install-docker:     Skip to install docker"
-  echo "      --code-server-version:     Set code-server version"
-  echo "      --code-server-password:    Set code-server Password"
-  echo "      --code-server-tls-domain:  Set code-server TLS domain"
+  echo "      --skip-install-docker:       Skip to install docker"
+  echo "      --skip-install-code-server:  Skip to install code-server"
+  echo "      --code-server-version:       Set code-server version"
+  echo "      --code-server-password:      Set code-server Password"
+  echo "      --code-server-tls-domain:    Set code-server TLS domain"
   echo
   echo "================================================================"
 }
@@ -22,6 +23,9 @@ while [ $# -gt 0 ]; do
       ;;
     --skip-install-docker) 
       FLAG_SKIP_INSTALL_DOCKER=true          
+      ;;
+    --skip-install-code-server)
+      FLAG_SKIP_INSTALL_CODE_SERVER=true
       ;;
     --code-server-version)
       CODE_SERVER_VERSION=$2
@@ -46,29 +50,22 @@ done
 
 DEFAULT_FLAG_SKIP_INSTALL_DOCKER=false
 if [ -z $FLAG_SKIP_INSTALL_DOCKER ]; then
-  read -p "skip-install-docker(true|default: false): " FLAG_SKIP_INSTALL_DOCKER
-  if [ ! $FLAG_SKIP_INSTALL_DOCKER = 'true' ]; then
-  	FLAG_SKIP_INSTALL_DOCKER=false
+  FLAG_SKIP_INSTALL_DOCKER=$DEFAULT_FLAG_SKIP_INSTALL_DOCKER
+fi
+
+DEFAULT_FLAG_SKIP_INSTALL_CODE_SERVER=false
+if [ -z $FLAG_SKIP_INSTALL_CODE_SERVER ]; then
+  FLAG_SKIP_INSTALL_CODE_SERVER=$DEFAULT_FLAG_SKIP_INSTALL_CODE_SERVER
+fi
+
+if [ ! $FLAG_SKIP_INSTALL_CODE_SERVER = "true" ]; then
+  if [ -z $CODE_SERVER_VERSION ]; then
+    read -p "code-server-version: " CODE_SERVER_VERSION
   fi
-fi
 
-if [ -z $CODE_SERVER_VERSION ]; then
-  read -p "code-server-version: " CODE_SERVER_VERSION
-fi
-
-if [ -z $CODE_SERVER_PASSWORD ]; then
-  read -p "code-server-password: " -s CODE_SERVER_PASSWORD; echo
-fi
-
-if [ -z $CODE_SERVER_TLS_ENABLE ]; then
-  read -p "code-server-tls-enable(true|default: false): " CODE_SERVER_TLS_ENABLE
-  if [ ! $CODE_SERVER_TLS_ENABLE  = 'true' ]; then
-    CODE_SERVER_TLS_ENABLE=false
+  if [ -z $CODE_SERVER_PASSWORD ]; then
+    read -p "code-server-password: " -s CODE_SERVER_PASSWORD; echo
   fi
-fi
-
-if [ $CODE_SERVER_TLS_ENABLE = 'true' ] && [ -z $CODE_SERVER_TLS_DOMAIN ]; then
-  read -p "code-server-tls-domain: " CODE_SERVER_TLS_DOMAIN
 fi
 
 command_exists() {
@@ -81,7 +78,6 @@ ensure_installed_ansible() {
   fi
 
   echo "ansible isn't installed!"
-  echo "Install ansible through apt"
 
   sudo apt update
   sudo apt install -y ansible
@@ -93,6 +89,7 @@ execute_ansible() {
 
   sh -c "cd $workspace_path && ansible-playbook -i hosts playbook.yml \
     --extra-vars skip_docker=$FLAG_SKIP_INSTALL_DOCKER \
+    --extra-vars skip_code_server=$FLAG_SKIP_INSTALL_CODE_SERVER \
     --extra-vars code_server_ver=$CODE_SERVER_VERSION \
     --extra-vars code_server_password=$CODE_SERVER_PASSWORD \
     --extra-vars code_server_tls_enable=$CODE_SERVER_TLS_ENABLE \

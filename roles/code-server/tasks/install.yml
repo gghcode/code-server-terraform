@@ -11,7 +11,7 @@
   unarchive:
     remote_src: yes
     src: "{{ code_server_tar_url }}"
-    dest: "{{ lib_dir }}"/code-server
+    dest: "{{ lib_dir }}/code-server"
     extra_opts:
       - --strip-components=1
       - --wildcards

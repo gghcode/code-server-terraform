@@ -5,8 +5,6 @@
   vars:
     main_user: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
   roles:
-    - role: code-server
-
     - role: git
       git_author_name: "Gyuhwan Kim"
       git_author_email: "gyuhwan.a.kim@gmail.com"
@@ -29,6 +27,9 @@
         - name: "rclone"
         - name: "terraform"
         - name: "kubectl"
+
+    - role: code-server
+      when: skip_code_server|bool != true
 
     - role: docker
       when: skip_docker|bool != true
