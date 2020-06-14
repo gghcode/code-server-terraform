@@ -6,8 +6,6 @@
     main_user: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
   roles:
     - role: code-server
-      code_server_tls_cert: "/etc/letsencrypt/live/{{ code_server_tls_domain }}/cert.pem"
-      code_server_tls_key: "/etc/letsencrypt/live/{{ code_server_tls_domain }}/privkey.pem"
 
     - role: git
       git_author_name: "Gyuhwan Kim"
