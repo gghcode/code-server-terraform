@@ -1,11 +1,13 @@
 ---
 - name: Create a code-server directory if it does not exist
+  become: yes
   file:
     path: "{{ lib_dir }}"
     state: directory
     mode: 0755
 
 - name: Download code-server binary
+  become: yes
   unarchive:
     remote_src: yes
     src: "{{ code_server_tar_url }}"
@@ -16,6 +18,7 @@
       - "*/"
 
 - name: Create code-server binary symbolic link
+  become: yes
   file:
     src: "{{ lib_dir }}/bin/code-server"
     dest: "{{ bin_dir }}/code-server"
@@ -24,6 +27,7 @@
     state: link
 
 - name: Copy code-server systemd unit file
+  become: yes
   template:
     src: code-server.service.j2
     dest: "{{ systemd_unit_files_dir }}/code-server.service"
@@ -33,13 +37,8 @@
     path: "{{ code_server_data_dir }}"
     state: directory
 
-- name: Grant code-server data dir
-  file:
-    path: "{{ code_server_data_dir }}"
-    owner: "{{ main_user }}"
-    mode: "755"
-
 - name: Create code-server env dir
+  become: yes
   file:
     path: "{{ code_server_env_dir }}"
     state: directory
@@ -50,6 +49,7 @@
     state: directory
 
 - name: Copy code-server env file
+  become: yes
   template:
     src: env.j2
     dest: "{{ code_server_env_dir }}/env"

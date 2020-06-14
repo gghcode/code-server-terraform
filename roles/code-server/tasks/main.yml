@@ -12,5 +12,4 @@
       - code_server_tls_domain != ''
 
 - name: Install code-server
-  become: yes
   import_tasks: install.yml

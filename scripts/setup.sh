@@ -81,6 +81,7 @@ ensure_installed_ansible() {
   fi
 
   echo "ansible isn't installed!"
+  echo "Install ansible through apt"
 
   sudo apt update
   sudo apt install -y ansible
