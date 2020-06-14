@@ -6,7 +6,7 @@ After=network.target
 [Service]
 User={{ main_user }}
 EnvironmentFile={{ code_server_env_dir }}/env
-ExecStart={{ bin_dir }}/code-server --auth password {% if code_server_tls_enable == true %} --cert $TLS_CERT --cert-key $TLS_KEY {% endif %} --host {{ code_server_host }} --port $PORT --user-data-dir {{ code_server_data_dir_abs }} --disable-telemetry {{ code_server_work_dir_abs }}
+ExecStart={{ bin_dir }}/code-server --auth password {% if code_server_tls_enable|bool == true %} --cert $TLS_CERT --cert-key $TLS_KEY {% endif %} --host {{ code_server_host }} --port $PORT --user-data-dir {{ code_server_data_dir_abs }} --disable-telemetry {{ code_server_work_dir_abs }}
 WorkingDirectory={{ code_server_work_dir }}
 
 [Install]

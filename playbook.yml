@@ -3,11 +3,29 @@
   connection: local
   gather_facts: yes
   vars:
+    user_email: "gyuhwan.a.kim@gmail.com"
     main_user: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
   roles:
+    - role: certbot
+      when: 
+        - lets_encrypt_domain is defined
+        - lets_encrypt_domain != ''
+      certbot_create_if_missing: yes
+      certbot_create_standalone_stop_services: []
+      certbot_auto_renew: true
+      certbot_auto_renew_user: "{{ main_user }}"
+      certbot_auto_renew_options: "--quiet --no-self-upgrade"
+      certbot_admin_email: "{{ user_email }}"
+      certbot_certs: 
+      - domains:
+        - "{{ lets_encrypt_domain }}"
+
+    - role: code-server
+      when: skip_code_server|bool != true
+      
     - role: git
       git_author_name: "Gyuhwan Kim"
-      git_author_email: "gyuhwan.a.kim@gmail.com"
+      git_author_email: "{{ user_email }}"
 
     - role: oh-my-zsh
       users:
@@ -28,8 +46,6 @@
         - name: "terraform"
         - name: "kubectl"
 
-    - role: code-server
-      when: skip_code_server|bool != true
-
     - role: docker
+      become: yes
       when: skip_docker|bool != true

@@ -4,12 +4,26 @@
       - code_server_ver is defined
       - code_server_tls_enable is defined
 
+- name: Register TLS Cert stat
+  when: code_server_tls_enable|bool == true
+  stat:
+    path: "{{ code_server_tls_cert }}"
+  register: tls_cert
+
+- name: Register TLS Key stat
+  when: code_server_tls_enable|bool == true
+  stat:
+    path: "{{ code_server_tls_key }}"
+  register: tls_key
+
 - name: Assert TLS arguments
   when: code_server_tls_enable|bool == true
   assert:
     that:
-      - code_server_tls_domain is defined
-      - code_server_tls_domain != ''
+      - lets_encrypt_domain is defined
+      - lets_encrypt_domain != ''
+      - tls_cert.stat.exists
+      - tls_key.stat.exists
 
 - name: Install code-server
   import_tasks: install.yml

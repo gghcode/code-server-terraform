@@ -9,7 +9,7 @@ help() {
   echo "      --skip-install-code-server:  Skip to install code-server"
   echo "      --code-server-version:       Set code-server version"
   echo "      --code-server-password:      Set code-server Password"
-  echo "      --code-server-tls-domain:    Set code-server TLS domain"
+  echo "      --lets-encrypt-domain:       Set Let's Encrypt domain"
   echo
   echo "================================================================"
 }
@@ -35,9 +35,9 @@ while [ $# -gt 0 ]; do
       CODE_SERVER_PASSWORD=$2
       shift
       ;;
-    --code-server-tls-domain)
+    --lets-encrypt-domain)
       CODE_SERVER_TLS_ENABLE=true
-      CODE_SERVER_TLS_DOMAIN=$2
+      LETS_ENCRYPT_DOMAIN=$2
       shift
       ;;
 		--*)
@@ -66,6 +66,22 @@ if [ ! $FLAG_SKIP_INSTALL_CODE_SERVER = "true" ]; then
   if [ -z $CODE_SERVER_PASSWORD ]; then
     read -p "code-server-password: " -s CODE_SERVER_PASSWORD; echo
   fi
+
+  DEFAULT_CODE_SERVER_TLS_ENABLE=true
+  if [ -z $CODE_SERVER_TLS_ENABLE ]; then
+    read -p "code-server-tls-enable(false|default: $DEFAULT_CODE_SERVER_TLS_ENABLE): " CODE_SERVER_TLS_ENABLE
+    if [ -z $CODE_SERVER_TLS_ENABLE ] || [ ! $CODE_SERVER_TLS_ENABLE = 'false' ]; then
+      CODE_SERVER_TLS_ENABLE=$DEFAULT_CODE_SERVER_TLS_ENABLE
+    fi
+  fi
+  
+  if [ $CODE_SERVER_TLS_ENABLE = 'true' ] && [ -z $LETS_ENCRYPT_DOMAIN ]; then
+    read -p "lets-encrypt-domain: " LETS_ENCRYPT_DOMAIN
+    if [ -z $LETS_ENCRYPT_DOMAIN ]; then
+      echo "Illegal empty domain"
+      exit 1
+    fi
+  fi
 fi
 
 command_exists() {
@@ -93,7 +109,7 @@ execute_ansible() {
     --extra-vars code_server_ver=$CODE_SERVER_VERSION \
     --extra-vars code_server_password=$CODE_SERVER_PASSWORD \
     --extra-vars code_server_tls_enable=$CODE_SERVER_TLS_ENABLE \
-    --extra-vars code_server_tls_domain=$CODE_SERVER_TLS_DOMAIN"
+    --extra-vars lets_encrypt_domain=$LETS_ENCRYPT_DOMAIN"
 }
 
 setup() {

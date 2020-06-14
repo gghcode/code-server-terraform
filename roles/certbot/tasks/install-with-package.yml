@@ -1,5 +1,6 @@
 ---
 - name: Install Certbot.
+  become: yes
   package: "name={{ certbot_package }} state=present"
 
 - name: Set Certbot script variable.
