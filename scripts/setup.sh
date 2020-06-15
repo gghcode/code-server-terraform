@@ -88,6 +88,14 @@ command_exists() {
 	command -v "$@" > /dev/null 2>&1
 }
 
+ensure_available_system() {
+  local linux_distro_name=$(cat /etc/*release* | grep ^NAME= | cut -d'"' -f2)
+  if [ ! "$linux_distro_name" = 'Ubuntu' ]; then
+    echo "Only allow the script on ubuntu OS"
+    exit 1
+  fi
+}
+
 ensure_installed_ansible() {
   if command_exists 'ansible'; then
     return
@@ -113,7 +121,9 @@ execute_ansible() {
 }
 
 setup() {
+  ensure_available_system
   ensure_installed_ansible
+
   execute_ansible
 }
 
