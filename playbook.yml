@@ -4,7 +4,7 @@
   gather_facts: yes
   vars:
     user_email: "gyuhwan.a.kim@gmail.com"
-    main_user: "{{ lookup('env','SUDO_USER') | default(lookup('env', 'USER'), true) }}"
+    main_user: "{{ lookup('env','SUDO_USER') | default(ansible_user_id, true) }}"
   roles:
     - role: certbot
       when: 

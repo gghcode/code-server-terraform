@@ -122,16 +122,16 @@ ensure_installed_ansible() {
   echo 'apt is initializing...'
 
   export DEBIAN_FRONTEND=noninteractive
-  
-  $sh_c 'apt update -qq'
 
-  echo 'Install ansible...'
+  $sh_c 'apt update -qq'
+  $sh_c 'apt-get install -yq software-properties-common gnupg2'
 
   local ubuntu_version=$(cat /etc/*release* | grep ^VERSION_ID= | cut -d'"' -f2)
   if [ ! "$ubuntu_version" = "20.04" ]; then
-    $sh_c 'apt-get install -yq software-properties-common gnupg2'
     $sh_c 'apt-add-repository --yes --update ppa:ansible/ansible'
   fi
+
+  echo 'Install ansible...'
 
   $sh_c 'apt install -y ansible'
 }
